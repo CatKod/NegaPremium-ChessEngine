@@ -1,0 +1,77 @@
+﻿using System;
+
+namespace NegaPremium {
+
+    /// <summary>
+    /// Specifies the output type.
+    /// </summary>
+    public enum OutputType { GUI, UCI, None }
+
+    /// <summary>
+    /// Defines restrictions for engines in standard games. 
+    /// </summary>
+    public static class Restrictions {
+
+        /// <summary>
+        /// The output type.
+        /// </summary>
+        public static OutputType Output = OutputType.GUI;
+
+        /// <summary>
+        /// The maximum number of milliseconds to use when moving. 
+        /// </summary>
+        public static Int32 MoveTime;
+
+        /// <summary>
+        /// The maximum depth to search to when moving.
+        /// </summary>
+        public static Int32 Depth;
+
+        /// <summary>
+        /// The maximum number of nodes to search when moving. 
+        /// </summary>
+        public static Int64 Nodes;
+
+        /// <summary>
+        /// The minimum number of principal variations to search when moving. 
+        /// </summary>
+        public static Int32 PrincipalVariations = 1;
+
+        /// <summary>
+        /// Whether to use time controls. 
+        /// </summary>
+        public static Boolean UseTimeControls;
+
+        /// <summary>
+        /// The time left for given side. TimeControl[c] gives the number of 
+        /// milliseconds left on the clock for colour c.
+        /// </summary>
+        public static Int32[] TimeControl;
+
+        /// <summary>
+        /// The time increment for given side. TimeIncrement[c] gives the number of 
+        /// milliseconds incremented for colour c after every move.
+        /// </summary>
+        public static Int32[] TimeIncrement;
+
+        /// <summary>
+        /// Initializes default values. 
+        /// </summary>
+        static Restrictions() {
+            Reset();
+        }
+
+        /// <summary>
+        /// Resets the restrictions to the default values, with the exception of 
+        /// output type.
+        /// </summary>
+        public static void Reset() {
+            UseTimeControls = false;
+            TimeControl = new Int32[2];
+            TimeIncrement = new Int32[2];
+            MoveTime = Int32.MaxValue;
+            Depth = Engine.DepthLimit;
+            Nodes = Int64.MaxValue;
+        }
+    }
+}

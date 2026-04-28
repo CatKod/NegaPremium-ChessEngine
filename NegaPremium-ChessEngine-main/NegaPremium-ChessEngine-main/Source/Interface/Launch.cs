@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+
+namespace NegaPremium {
+
+    /// <summary>
+    /// Handles the application launch. 
+    /// </summary>
+    public static class Launch {
+
+        /// <summary>
+        /// Encapsulates a method that takes no parameters and returns no value. 
+        /// </summary>
+        private delegate void Action();
+
+        /// <summary>
+        /// The main entry point for the application. 
+        /// </summary>
+        /// <param name="args">The command-line arguments.</param>
+        [STAThread]
+        public static void Main(String[] args) {
+
+            // Display terminal window by default. We will hide it later if necessary. 
+            Terminal.Initialize();
+
+            // Run as GUI application if there are no command-line arguments. Display 
+            // the Settings window, which will display the main board window as needed. 
+            if (args.Length == 0) {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Settings());
+            }
+        }
+    }
+}
