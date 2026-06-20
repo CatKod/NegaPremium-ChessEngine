@@ -1,47 +1,91 @@
 ﻿using NegaPremium.Properties;
 using System;
-using System.Threading;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace NegaPremium {
-
+namespace NegaPremium
+{
     /// <summary>
     /// Represents a settings dialog box. 
     /// </summary>
-    partial class Settings : Form {
+    public partial class Settings : Form
+    {
+        private ComboBox cboWhite;
+        private ComboBox cboBlack;
 
         /// <summary>
         /// Constructs a Settings window. 
         /// </summary>
-        public Settings() {
+        public Settings()
+        {
             InitializeComponent();
+
+            // Protect Designer: Stop execution if opened in design mode to prevent errors.
+            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
+
             Icon = Resources.Icon;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Protect Designer: Only construct the UI during actual runtime.
+            if (DesignMode) return;
+
+            this.ClientSize = new Size(380, 145);
+
+            whitePanel.Size = new Size(165, 75);
+            whitePanel.Location = new Point(15, 10);
+
+            blackPanel.Size = new Size(165, 75);
+            blackPanel.Location = new Point(195, 10);
+
+            start.Size = new Size(345, 35);
+            start.Location = new Point(15, 95);
+
+            whitePanel.Controls.Clear();
+            blackPanel.Controls.Clear();
+
+            // Create a ComboBox to select the mode for White.
+            cboWhite = new ComboBox();
+            cboWhite.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboWhite.Location = new Point(15, 30);
+            cboWhite.Width = 135;
+            cboWhite.Items.AddRange(PlayerFactory.GetAvailableModes());
+            cboWhite.SelectedIndex = 0; // Default is Human.
+            whitePanel.Controls.Add(cboWhite);
+
+            // Create a ComboBox to select the mode for Black.
+            cboBlack = new ComboBox();
+            cboBlack.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboBlack.Location = new Point(15, 30);
+            cboBlack.Width = 135;
+            cboBlack.Items.AddRange(PlayerFactory.GetAvailableModes());
+            cboBlack.SelectedIndex = 1; // Default is Nega Premium.
+            blackPanel.Controls.Add(cboBlack);
         }
 
         /// <summary>
         /// Handles the Start button click. 
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The raised event.</param>
-        private void StartClick(Object sender, EventArgs e) {
+        private void StartClick(Object sender, EventArgs e)
+        {
+            string whiteMode = cboWhite.SelectedItem.ToString();
+            string blackMode = cboBlack.SelectedItem.ToString();
 
-            // Open the GUI interface only if both players have been chosen. 
-            if ((whiteHuman.Checked || whiteComputer.Checked) && (blackHuman.Checked || blackComputer.Checked)) {
-                IPlayer white = whiteHuman.Checked ? new Human() : new Engine() as IPlayer;
-                IPlayer black = blackHuman.Checked ? new Human() : new Engine() as IPlayer;
+            IPlayer white = PlayerFactory.CreatePlayer(whiteMode);
+            IPlayer black = PlayerFactory.CreatePlayer(blackMode);
 
-                // If both players are human there's no need for the Engine Output window. 
-                if (white is Human && black is Human)
-                    Terminal.Hide();
-                else
-                    Restrictions.MoveTime = 3000;
+            if (white is Human && black is Human)
+                Terminal.Hide();
+            else
+                Restrictions.MoveTime = 3000;
 
-                // Display the GUI window and hide this window. 
-                new Window() { Game = new Game(white, black) }.Show();
-                Visible = false;
-                ShowInTaskbar = false;
-            } else
-                MessageBox.Show("Please select a player for each side.");
-        }        
+            new Window() { Game = new Game(white, black) }.Show();
+            Visible = false;
+            ShowInTaskbar = false;
+        }
     }
 }

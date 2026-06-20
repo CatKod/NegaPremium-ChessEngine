@@ -5,10 +5,19 @@ using System.Drawing;
 namespace NegaPremium {
 
     /// <summary>
-    /// Encapsulates the main IPlayer interface of the Nega Premium chess
-    /// engine. 
+    /// Encapsulates the main IPlayer interface of the Nega Premium chess engine. 
     /// </summary>
     public sealed partial class Engine : IPlayer {
+
+        /// <summary>
+        /// Engine is AI. 
+        /// </summary>
+        public Boolean IsAI
+        {
+            get { 
+                return true; 
+            }
+        }
 
         /// <summary>
         /// The number of nodes visited during the most recent search. 

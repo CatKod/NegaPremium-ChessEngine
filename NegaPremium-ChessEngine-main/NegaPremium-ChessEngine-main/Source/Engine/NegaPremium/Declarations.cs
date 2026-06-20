@@ -7,8 +7,7 @@ using System.Reflection;
 namespace NegaPremium {
 
     /// <summary>
-    /// Encapsulates the declarations component of the Nega Premium chess 
-    /// engine. 
+    /// Encapsulates the declarations component of the Nega Premium chess engine. 
     /// </summary>
     public sealed partial class Engine : IPlayer {
 
