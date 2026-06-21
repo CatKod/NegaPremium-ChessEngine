@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -9,6 +9,11 @@ namespace NegaPremium {
     /// engine. 
     /// </summary>
     public sealed partial class Engine : IPlayer {
+
+        /// <summary>
+        /// Selects which search algorithm to use.
+        /// </summary>
+        public SearchMode Mode { get; set; } = SearchMode.Classic;
 
         /// <summary>
         /// The number of nodes visited during the most recent search. 
@@ -86,7 +91,9 @@ namespace NegaPremium {
             _stopwatch.Start();
 
             // Perform the search. 
-            Int32 move = Search(position);
+            Int32 move = Mode == SearchMode.HillClimbing
+                ? HillClimbingSearch(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
+                : Search(position);
             _abortSearch = true;
 
             // Output search statistics. 

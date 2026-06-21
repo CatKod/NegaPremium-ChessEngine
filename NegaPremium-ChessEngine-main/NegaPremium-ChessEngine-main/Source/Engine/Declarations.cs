@@ -1,10 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 
 namespace NegaPremium {
+
+    public enum SearchMode {
+        Classic,
+        HillClimbing
+    }
 
     /// <summary>
     /// Encapsulates the declarations component of the Nega Premium chess 
@@ -97,6 +102,7 @@ namespace NegaPremium {
         private readonly Int32[][] _pvMoves = new Int32[PlyLimit][];
         private readonly Int32[] _pvLength = new Int32[PlyLimit];
         private readonly Int32[][] _killerMoves = new Int32[PlyLimit][];
+        private readonly Int32[,] _historyMoves = new Int32[2, MovesLimit];
         private readonly Single[] _moveValues = new Single[MovesLimit];
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private Boolean _abortSearch = true;

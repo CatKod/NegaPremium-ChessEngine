@@ -1,7 +1,7 @@
-﻿using NegaPremium.Properties;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -37,6 +37,8 @@ namespace NegaPremium {
         public Window() {
             InitializeComponent();
 
+            Icon = LoadIconSafely();
+
             // bật double buffering
             SetStyle(ControlStyles.AllPaintingInWmPaint 
                    | ControlStyles.UserPaint 
@@ -44,7 +46,6 @@ namespace NegaPremium {
             DoubleBuffered = true;
 
             // Initialize properties and fields. 
-            Icon = Resources.Icon;
             ClientSize = new Size(VisualPosition.Width, VisualPosition.Width + MenuHeight);
 
             // Initialize event handlers. 
@@ -105,6 +106,16 @@ namespace NegaPremium {
         /// <summary>
         /// Updates which menu components are enabled or checked. 
         /// </summary>
+        private static Icon LoadIconSafely() {
+            try {
+                using (Stream stream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico"))) {
+                    return new Icon(stream);
+                }
+            } catch {
+                return SystemIcons.Application;
+            }
+        }
+
         private void UpdateMenu() {
             Boolean hasGame = Game != null;
 
@@ -139,6 +150,9 @@ namespace NegaPremium {
                 searchNodesMenuItem.Enabled = hasEngine;
                 hashSizeMenuItem.Enabled = hasEngine;
                 multiPVMenuItem.Enabled = hasEngine;
+                searchModeMenuItem.Enabled = hasEngine;
+                classicModeMenuItem.Checked = hasEngine && GetEngine().Mode == SearchMode.Classic;
+                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == SearchMode.HillClimbing;
             }
         }
 
@@ -335,6 +349,26 @@ namespace NegaPremium {
         /// <param name="e">The raised event.</param>
         private void AboutClick(Object sender, EventArgs e) {
             MessageBox.Show("Nega Premium is a chess engine written in C#, developed to learn about game tree searching. Its playing strength has been and will continue to steadily increase as more techniques are added to its arsenal. \n\nNega Team");
+        }
+
+        private Engine GetEngine() {
+            return Game?.White as Engine ?? Game?.Black as Engine;
+        }
+
+        private void ClassicModeClick(Object sender, EventArgs e) {
+            Engine engine = GetEngine();
+            if (engine != null) {
+                engine.Mode = SearchMode.Classic;
+                UpdateMenu();
+            }
+        }
+
+        private void HillClimbingModeClick(Object sender, EventArgs e) {
+            Engine engine = GetEngine();
+            if (engine != null) {
+                engine.Mode = SearchMode.HillClimbing;
+                UpdateMenu();
+            }
         }
 
         protected override void OnMouseDown(MouseEventArgs e) {

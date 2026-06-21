@@ -1,5 +1,7 @@
-﻿using NegaPremium.Properties;
+using NegaPremium.Properties;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -15,7 +17,17 @@ namespace NegaPremium {
         /// </summary>
         public Settings() {
             InitializeComponent();
-            Icon = Resources.Icon;
+            Icon = LoadIconSafely();
+        }
+
+        private static Icon LoadIconSafely() {
+            try {
+                using (Stream stream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico"))) {
+                    return new Icon(stream);
+                }
+            } catch {
+                return SystemIcons.Application;
+            }
         }
 
         /// <summary>
@@ -29,6 +41,13 @@ namespace NegaPremium {
             if ((whiteHuman.Checked || whiteComputer.Checked) && (blackHuman.Checked || blackComputer.Checked)) {
                 IPlayer white = whiteHuman.Checked ? new Human() : new Engine() as IPlayer;
                 IPlayer black = blackHuman.Checked ? new Human() : new Engine() as IPlayer;
+
+                SearchMode whiteMode = whiteHillMode.Checked ? SearchMode.HillClimbing : SearchMode.Classic;
+                SearchMode blackMode = blackHillMode.Checked ? SearchMode.HillClimbing : SearchMode.Classic;
+                if (white is Engine whiteEngine)
+                    whiteEngine.Mode = whiteMode;
+                if (black is Engine blackEngine)
+                    blackEngine.Mode = blackMode;
 
                 // If both players are human there's no need for the Engine Output window. 
                 if (white is Human && black is Human)

@@ -1,4 +1,4 @@
-﻿namespace NegaPremium {
+namespace NegaPremium {
     partial class Settings {
         /// <summary>
         /// Required designer variable.
@@ -30,8 +30,16 @@
             this.blackPanel = new System.Windows.Forms.GroupBox();
             this.blackComputer = new System.Windows.Forms.RadioButton();
             this.blackHuman = new System.Windows.Forms.RadioButton();
+            this.whiteSearchPanel = new System.Windows.Forms.GroupBox();
+            this.whiteClassicMode = new System.Windows.Forms.RadioButton();
+            this.whiteHillMode = new System.Windows.Forms.RadioButton();
+            this.blackSearchPanel = new System.Windows.Forms.GroupBox();
+            this.blackClassicMode = new System.Windows.Forms.RadioButton();
+            this.blackHillMode = new System.Windows.Forms.RadioButton();
             this.whitePanel.SuspendLayout();
             this.blackPanel.SuspendLayout();
+            this.whiteSearchPanel.SuspendLayout();
+            this.blackSearchPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // start
@@ -126,11 +134,85 @@
             this.blackHuman.Text = "Human";
             this.blackHuman.UseVisualStyleBackColor = true;
             // 
+            // searchPanel
+            // 
+            this.whiteSearchPanel.Controls.Add(this.whiteClassicMode);
+            this.whiteSearchPanel.Controls.Add(this.whiteHillMode);
+            this.blackSearchPanel.Controls.Add(this.blackClassicMode);
+            this.blackSearchPanel.Controls.Add(this.blackHillMode);
+            this.whiteSearchPanel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.whiteSearchPanel.Location = new System.Drawing.Point(12, 140);
+            this.whiteSearchPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.whiteSearchPanel.Name = "whiteSearchPanel";
+            this.whiteSearchPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.whiteSearchPanel.Size = new System.Drawing.Size(269, 72);
+            this.whiteSearchPanel.TabIndex = 4;
+            this.whiteSearchPanel.TabStop = false;
+            this.whiteSearchPanel.Text = "White Search Mode";
+            // 
+            // whiteClassicMode
+            // 
+            this.whiteClassicMode.AutoSize = true;
+            this.whiteClassicMode.Checked = true;
+            this.whiteClassicMode.Location = new System.Drawing.Point(16, 25);
+            this.whiteClassicMode.Name = "whiteClassicMode";
+            this.whiteClassicMode.Size = new System.Drawing.Size(84, 24);
+            this.whiteClassicMode.TabIndex = 0;
+            this.whiteClassicMode.TabStop = true;
+            this.whiteClassicMode.Text = "Classic";
+            this.whiteClassicMode.UseVisualStyleBackColor = true;
+            // 
+            // whiteHillMode
+            // 
+            this.whiteHillMode.AutoSize = true;
+            this.whiteHillMode.Location = new System.Drawing.Point(126, 25);
+            this.whiteHillMode.Name = "whiteHillMode";
+            this.whiteHillMode.Size = new System.Drawing.Size(165, 24);
+            this.whiteHillMode.TabIndex = 1;
+            this.whiteHillMode.Text = "Hill Climbing";
+            this.whiteHillMode.UseVisualStyleBackColor = true;
+            // 
+            // blackSearchPanel
+            // 
+            this.blackSearchPanel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.blackSearchPanel.Location = new System.Drawing.Point(12, 220);
+            this.blackSearchPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.blackSearchPanel.Name = "blackSearchPanel";
+            this.blackSearchPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.blackSearchPanel.Size = new System.Drawing.Size(269, 72);
+            this.blackSearchPanel.TabIndex = 5;
+            this.blackSearchPanel.TabStop = false;
+            this.blackSearchPanel.Text = "Black Search Mode";
+            // 
+            // blackClassicMode
+            // 
+            this.blackClassicMode.AutoSize = true;
+            this.blackClassicMode.Checked = true;
+            this.blackClassicMode.Location = new System.Drawing.Point(16, 25);
+            this.blackClassicMode.Name = "blackClassicMode";
+            this.blackClassicMode.Size = new System.Drawing.Size(84, 24);
+            this.blackClassicMode.TabIndex = 0;
+            this.blackClassicMode.TabStop = true;
+            this.blackClassicMode.Text = "Classic";
+            this.blackClassicMode.UseVisualStyleBackColor = true;
+            // 
+            // blackHillMode
+            // 
+            this.blackHillMode.AutoSize = true;
+            this.blackHillMode.Location = new System.Drawing.Point(126, 25);
+            this.blackHillMode.Name = "blackHillMode";
+            this.blackHillMode.Size = new System.Drawing.Size(165, 24);
+            this.blackHillMode.TabIndex = 1;
+            this.blackHillMode.Text = "Hill Climbing";
+            this.blackHillMode.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 140);
+            this.ClientSize = new System.Drawing.Size(293, 290);
+            this.Controls.Add(this.blackSearchPanel);
+            this.Controls.Add(this.whiteSearchPanel);
             this.Controls.Add(this.blackPanel);
             this.Controls.Add(this.whitePanel);
             this.Controls.Add(this.start);
@@ -146,6 +228,10 @@
             this.whitePanel.PerformLayout();
             this.blackPanel.ResumeLayout(false);
             this.blackPanel.PerformLayout();
+            this.whiteSearchPanel.ResumeLayout(false);
+            this.whiteSearchPanel.PerformLayout();
+            this.blackSearchPanel.ResumeLayout(false);
+            this.blackSearchPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -159,5 +245,11 @@
         private System.Windows.Forms.GroupBox blackPanel;
         private System.Windows.Forms.RadioButton blackComputer;
         private System.Windows.Forms.RadioButton blackHuman;
+        private System.Windows.Forms.GroupBox whiteSearchPanel;
+        private System.Windows.Forms.RadioButton whiteClassicMode;
+        private System.Windows.Forms.RadioButton whiteHillMode;
+        private System.Windows.Forms.GroupBox blackSearchPanel;
+        private System.Windows.Forms.RadioButton blackClassicMode;
+        private System.Windows.Forms.RadioButton blackHillMode;
     }
 }
