@@ -31,6 +31,7 @@ namespace NegaPremium {
                 UInt64 enemyPawnBitboard = bitboard[(1 - colour) | Piece.Pawn];
                 UInt64 allPawnBitboard = pawnBitboard | enemyPawnBitboard;
                 Int32 enemyKingSquare = Bit.Read(bitboard[(1 - colour) | Piece.King]);
+                UInt64 enemyKingZoneBitboard = Attack.King(enemyKingSquare) | bitboard[(1 - colour) | Piece.King];
                 Single value = position.Material[colour];
 
                 // Evaluate king. 
@@ -60,6 +61,8 @@ namespace NegaPremium {
 
                     UInt64 pseudoMoveBitboard = Attack.Bishop(square, position.OccupiedBitboard);
                     value += BishopMobilityValue[Bit.Count(targetBitboard & pseudoMoveBitboard)];
+                    value += CenterControlValue * Bit.Count(pseudoMoveBitboard & CenterBitboard);
+                    value += MinorKingAttackValue * Bit.Count(pseudoMoveBitboard & enemyKingZoneBitboard);
                     _minorAttackBitboard[colour] |= pseudoMoveBitboard;
                 }
 
@@ -72,6 +75,8 @@ namespace NegaPremium {
 
                     UInt64 pseudoMoveBitboard = Attack.Knight(square);
                     value += KnightMobilityValue[Bit.Count(targetBitboard & pseudoMoveBitboard)];
+                    value += CenterControlValue * Bit.Count(pseudoMoveBitboard & CenterBitboard);
+                    value += MinorKingAttackValue * Bit.Count(pseudoMoveBitboard & enemyKingZoneBitboard);
                     _minorAttackBitboard[colour] |= pseudoMoveBitboard;
                 }
 
@@ -81,6 +86,11 @@ namespace NegaPremium {
                     square = Bit.Pop(ref pieceBitboard);
                     value += opening * QueenOpeningPositionValue[colour][square];
                     value += endgame * QueenToEnemyKingSpatialValue[square][enemyKingSquare];
+
+                    UInt64 pseudoMoveBitboard = Attack.Queen(square, position.OccupiedBitboard);
+                    value += QueenMobilityValue * Bit.Count(targetBitboard & pseudoMoveBitboard);
+                    value += CenterControlValue * Bit.Count(pseudoMoveBitboard & CenterBitboard);
+                    value += QueenKingAttackValue * Bit.Count(pseudoMoveBitboard & enemyKingZoneBitboard);
                 }
 
                 // Evaluate rooks. 
@@ -88,6 +98,14 @@ namespace NegaPremium {
                 while (pieceBitboard != 0) {
                     square = Bit.Pop(ref pieceBitboard);
                     value += RookPositionValue[colour][square];
+
+                    UInt64 pseudoMoveBitboard = Attack.Rook(square, position.OccupiedBitboard);
+                    value += RookMobilityValue * Bit.Count(targetBitboard & pseudoMoveBitboard);
+                    value += CenterControlValue * Bit.Count(pseudoMoveBitboard & CenterBitboard);
+                    value += RookKingAttackValue * Bit.Count(pseudoMoveBitboard & enemyKingZoneBitboard);
+
+                    if ((pawnBitboard & Bit.File[square]) == 0)
+                        value += (enemyPawnBitboard & Bit.File[square]) == 0 ? RookOpenFileValue : RookSemiOpenFileValue;
                 }
 
                 // Evaluate pawns.
@@ -102,7 +120,8 @@ namespace NegaPremium {
                         value += DoubledPawnValue;
 
                     else if ((PawnBlockadeBitboard[colour][square] & enemyPawnBitboard) == 0)
-                        value += PassedPawnValue + endgame * PassedPawnEndgamePositionValue[colour][square];
+                        value += PassedPawnValue + endgame * PassedPawnEndgamePositionValue[colour][square]
+                               + (1F + endgame) * PassedPawnAdvanceValue[PawnAdvance(colour, square)];
 
                     if ((ShortAdjacentFilesBitboard[square] & pawnBitboard) == 0)
                         value += IsolatedPawnValue;
@@ -112,6 +131,8 @@ namespace NegaPremium {
                 // Evaluate pawn threat to enemy minor pieces.
                 UInt64 victimBitboard = bitboard[(1 - colour)] ^ enemyPawnBitboard;
                 value += PawnAttackValue * Bit.CountSparse(_pawnAttackBitboard[colour] & victimBitboard);
+                value += CenterControlValue * Bit.Count(_pawnAttackBitboard[colour] & CenterBitboard);
+                value += PawnKingAttackValue * Bit.Count(_pawnAttackBitboard[colour] & enemyKingZoneBitboard);
 
                 // Evaluate pawn defence to friendly minor pieces. 
                 UInt64 lowValueBitboard = bitboard[colour | Piece.Bishop] | bitboard[colour | Piece.Knight] | bitboard[colour | Piece.Pawn];
@@ -153,6 +174,10 @@ namespace NegaPremium {
             }
             
             return (Int32)totalValue;
+        }
+
+        private static Int32 PawnAdvance(Int32 colour, Int32 square) {
+            return colour == Colour.White ? 7 - Position.Rank(square) : Position.Rank(square);
         }
 
         /// <summary>

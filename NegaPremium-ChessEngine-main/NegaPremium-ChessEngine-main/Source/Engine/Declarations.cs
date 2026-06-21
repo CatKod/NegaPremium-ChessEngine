@@ -60,9 +60,14 @@ namespace NegaPremium {
         // Evaluation constants. 
         public Int32 KingOnOpenFileValue = -58;
         public Int32 KingAdjacentToOpenFileValue = -42;
+        public Int32 PawnKingAttackValue = 2;
+        public Int32 MinorKingAttackValue = 3;
+        public Int32 RookKingAttackValue = 4;
+        public Int32 QueenKingAttackValue = 2;
 
         public Int32[][] QueenToEnemyKingSpatialValue = new Int32[64][];
         public Int32[] QueenDistanceToEnemyKingValue = { 0, 17, 8, 4, 0, -4, -8, -12 };
+        public Int32 QueenMobilityValue = 1;
 
         public Int32 BishopPairValue = 29;
         public Int32[] BishopMobilityValue = { -25, -12, -3, 0, 2, 5, 8, 10, 12, 13, 15, 17, 18, 18 };
@@ -72,16 +77,22 @@ namespace NegaPremium {
         public Int32[] KnightMovesToEnemyKingValue = { 0, 21, 8, 0, -4, -8, -12 };
         public Int32[] KnightMobilityValue = { -21, -8, -2, 0, 2, 5, 8, 10, 12 };
 
+        public Int32 RookOpenFileValue = 18;
+        public Int32 RookSemiOpenFileValue = 9;
+        public Int32 RookMobilityValue = 2;
+
         public Int32 PawnEndgameGainValue = 17;
         public Int32 PawnNearKingValue = 14;
         public Int32 DoubledPawnValue = -21;
         public Int32 IsolatedPawnValue = -17;
         public Int32 PassedPawnValue = 25;
+        public Int32[] PassedPawnAdvanceValue = { 0, 0, 2, 6, 14, 28, 50, 0 };
         public Int32 PawnAttackValue = 17;
         public Int32 PawnDefenceValue = 6;
         public Int32 PawnDeficiencyValue = -29;
 
         public static readonly Int32[] PieceValue = new Int32[14];
+        public Int32 CenterControlValue = 5;
         public Int32 TempoValue = 6;
 
         private static readonly UInt64[] PawnShieldBitboard = new UInt64[64];
@@ -90,6 +101,7 @@ namespace NegaPremium {
         private static readonly UInt64[][] ShortForwardFileBitboard = { new UInt64[64], new UInt64[64] };
         private const UInt64 NotAFileBitboard = 0xFEFEFEFEFEFEFEFEUL;
         private const UInt64 NotHFileBitboard = 0x7F7F7F7F7F7F7F7FUL;
+        private const UInt64 CenterBitboard = (1UL << 27) | (1UL << 28) | (1UL << 35) | (1UL << 36);
 
         private static readonly Int32[][] RectilinearDistance = new Int32[64][];
         private static readonly Int32[][] ChebyshevDistance = new Int32[64][];
