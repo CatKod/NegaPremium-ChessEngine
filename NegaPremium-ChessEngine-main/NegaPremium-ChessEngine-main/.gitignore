@@ -309,6 +309,13 @@ paket-files/
 __pycache__/
 *.pyc
 
+# ML experiment output
+ml/models/
+ml/runs/
+ml/datasets/**/processed/
+ml/datasets/**/splits/
+ml/datasets/**/*.archive
+
 # Cake - Uncomment if you are using it
 # tools/**
 # !tools/packages.config
