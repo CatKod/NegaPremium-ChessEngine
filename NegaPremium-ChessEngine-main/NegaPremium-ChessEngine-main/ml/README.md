@@ -7,15 +7,22 @@ training scripts, model checkpoints, and experiment output here.
 ## Current dataset
 
 - Dataset: Kaggle `krithiik/chess-pieces`
-- Local path: `datasets/chess-pieces-kaggle/raw/all_resized_into_sub_folders_640`
 - Task fit: supervised image classification for chess piece recognition
 - Classes: 12 piece-color classes, 25 JPG images per class
+- Metadata path: `datasets/chess-pieces-kaggle/metadata`
 
-The class folder is ready for common CNN loaders:
+Raw images are intentionally not kept in Git. Download them locally when needed:
 
-- TensorFlow/Keras: `tf.keras.utils.image_dataset_from_directory(...)`
-- PyTorch: `torchvision.datasets.ImageFolder(...)`
+```powershell
+python -m pip install -r ml/requirements.txt
+python ml/scripts/download_chess_pieces_dataset.py
+python ml/scripts/prepare_chess_pieces_dataset.py
+```
+
+The preparation step creates deterministic `train`, `validation`, and `test`
+CSV files for CNN training. Add `--copy-images` if a framework needs a physical
+`processed/{split}/{label}` folder layout.
 
 Generated outputs such as trained models, run logs, processed data, and train
-splits should be written under ignored folders like `ml/models/`, `ml/runs/`,
-or `ml/datasets/**/processed/`.
+image folders should be written under ignored folders like `ml/models/`,
+`ml/runs/`, or `ml/datasets/**/processed/`.
