@@ -54,6 +54,7 @@ From the project root, run:
 python -m pip install -r ml/requirements.txt
 python ml/scripts/download_chess_pieces_dataset.py
 python ml/scripts/prepare_chess_pieces_dataset.py
+python ml/scripts/preprocess_chess_pieces_images.py --image-size 128 --overwrite
 ```
 
 The default split is deterministic with seed `42`:
@@ -65,3 +66,12 @@ The default split is deterministic with seed `42`:
 Use `--copy-images` on the prepare script when a training framework needs a
 physical `processed/{split}/{label}` folder layout. Keep `raw/` read-only in
 training code.
+
+The preprocess script creates CNN-ready input under:
+
+```text
+ml/datasets/chess-pieces-kaggle/processed/cnn_input_128
+```
+
+It converts images to RGB, resizes them to `128x128`, writes resized PNG files,
+and exports normalized `float32` `.npz` arrays with pixel values in `[0, 1]`.

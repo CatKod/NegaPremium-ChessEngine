@@ -321,6 +321,7 @@ ml/**/*.keras
 ml/**/*.onnx
 ml/**/*.pt
 ml/**/*.pth
+ml/**/*.npz
 
 # Cake - Uncomment if you are using it
 # tools/**
