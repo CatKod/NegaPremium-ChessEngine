@@ -1,36 +1,42 @@
-# Machine Learning Workspace
+# Không gian Machine Learning
 
-This folder is reserved for CNN experiments that sit beside the C# chess engine.
-Keep the engine source under `Source/` unchanged, and place ML data, notebooks,
-training scripts, model checkpoints, and experiment output here.
+Thư mục này dùng cho phần thử nghiệm CNN bên cạnh chess engine C#.
+Không đặt dữ liệu hoặc model ML vào `Source/`; phần source engine C# nên giữ
+riêng, còn dữ liệu, script xử lý, checkpoint model và kết quả thí nghiệm đặt ở
+đây.
 
-## Current dataset
+## Dataset hiện tại
 
-- Dataset: Kaggle `krithiik/chess-pieces`
-- Task fit: supervised image classification for chess piece recognition
-- Classes: 12 piece-color classes, 25 JPG images per class
-- Metadata path: `datasets/chess-pieces-kaggle/metadata`
+- Dataset: Kaggle `dev102/predicting-pro-chess-moves`
+- Bài toán: học có giám sát để dự đoán nước đi tốt nhất từ một thế cờ
+- Input: thế cờ dạng FEN được mã hóa thành ma trận bàn cờ
+- Output cần dự đoán: nước đi tốt nhất dạng UCI, ví dụ `e2e4`
 
-Raw images are intentionally not kept in Git. Download them locally when needed:
+File raw tải từ Kaggle không được lưu vào Git để repo không bị nặng. Khi cần
+tạo tập input cho CNN, chạy:
 
 ```powershell
 python -m pip install -r ml/requirements.txt
-python ml/scripts/download_chess_pieces_dataset.py
-python ml/scripts/prepare_chess_pieces_dataset.py
-python ml/scripts/preprocess_chess_pieces_images.py --image-size 128 --overwrite
+python ml/scripts/build_chess_move_matrix_dataset.py --max-rows 50000 --overwrite
 ```
 
-The preparation step creates deterministic `train`, `validation`, and `test`
-CSV files for CNN training. Add `--copy-images` if a framework needs a physical
-`processed/{split}/{label}` folder layout.
+Script trên sẽ tải dataset FEN/nước đi nếu máy chưa có, chuyển từng FEN thành
+ma trận số của bàn cờ, đọc nước đi tốt nhất, rồi ghi ra file `.npz` sẵn sàng
+đưa vào CNN.
 
-The preprocessing step creates CNN-ready inputs under
-`datasets/chess-pieces-kaggle/processed/cnn_input_128`:
+File kết quả nằm ở:
 
-- `images/{split}/{label}/*.png`: RGB images resized to `128x128`
-- `arrays/{split}.npz`: normalized `float32` tensors in `[0, 1]`
-- `preprocessing_manifest.json`: input size, class list, and split counts
+```text
+datasets/chess-moves-kaggle/processed/matrix/chess_move_matrices_50000_p18.npz
+```
 
-Generated outputs such as trained models, run logs, processed data, and train
-image folders should be written under ignored folders like `ml/models/`,
-`ml/runs/`, or `ml/datasets/**/processed/`.
+Trong file `.npz` có:
+
+- `x`: ma trận bàn cờ, shape `(N, 8, 8, 18)`, kiểu dữ liệu `float32`
+- `y`: nhãn số của nước đi tốt nhất
+- `move_labels`: bảng ánh xạ từ nhãn `y` về nước đi UCI
+- `move_uci`, `move_from_square`, `move_to_square`, `move_promotion`
+
+Các file sinh ra như model đã train, log chạy, dữ liệu đã xử lý và ma trận đầu
+ra nên đặt trong những thư mục đã bị ignore như `ml/models/`, `ml/runs/`, hoặc
+`ml/datasets/**/processed/`.
