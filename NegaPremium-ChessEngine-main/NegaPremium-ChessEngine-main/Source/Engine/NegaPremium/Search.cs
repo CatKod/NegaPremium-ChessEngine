@@ -254,7 +254,7 @@ namespace NegaPremium {
             Boolean futileNode = false;
             Int32 futilityValue = 0;
             if (depth < FutilityMargin.Length && !inCheck) {
-                futilityValue = Evaluate(position) + FutilityMargin[depth];
+                futilityValue = Evaluator.Evaluate(position) + FutilityMargin[depth];
                 futileNode = futilityValue <= alpha;
             }
 
@@ -274,7 +274,7 @@ namespace NegaPremium {
                 Boolean reducible = i + 1 > irreducibleMoves;
 
                 // Perform futility pruning. 
-                if (futileNode && !dangerous && futilityValue + PieceValue[Move.Capture(move)] <= alpha) {
+                if (futileNode && !dangerous && futilityValue + Evaluator.PieceValue[Move.Capture(move)] <= alpha) {
                     _futileMoves++;
                     continue;
                 }
@@ -346,7 +346,7 @@ namespace NegaPremium {
 
             // Evaluate the position statically. Check for upper bound cutoff and lower 
             // bound improvement. 
-            Int32 value = Evaluate(position);
+            Int32 value = Evaluator.Evaluate(position);
             if (value >= beta)
                 return value;
             if (value > alpha)
@@ -401,7 +401,7 @@ namespace NegaPremium {
                 Int32 move = moves[i];
 
                 // Consider the move only if it doesn't lose material.
-                if (EvaluateStaticExchange(position, move) >= 0) {
+                if (Evaluator.EvaluateStaticExchange(position, move) >= 0) {
 
                     // Make the move. 
                     position.Make(move);
@@ -469,7 +469,7 @@ namespace NegaPremium {
         /// <param name="move">The move to consider.</param>
         /// <returns>A value for the given move that is useful for move ordering.</returns>
         private Single MoveOrderingValue(Int32 move) {
-            Single value = PieceValue[Move.Capture(move)] / (Single)PieceValue[Move.Piece(move)];
+            Single value = Evaluator.PieceValue[Move.Capture(move)] / (Single)Evaluator.PieceValue[Move.Piece(move)];
             if (Move.IsQueenPromotion(move))
                 value += QueenPromotionMoveValue;
             return value;
@@ -482,18 +482,21 @@ namespace NegaPremium {
         /// <returns>A bitboard giving the longer term attack possibilites of the enemy pawns.</returns>
         private static UInt64 PassedPawnPreventionBitboard(Position position) {
             UInt64 pawnblockBitboard = position.Bitboard[(1 - position.SideToMove) | Piece.Pawn];
-            if (position.SideToMove == Colour.White) {
+            if (position.SideToMove == Colour.White)
+            {
                 pawnblockBitboard |= pawnblockBitboard << 8;
                 pawnblockBitboard |= pawnblockBitboard << 16;
                 pawnblockBitboard |= pawnblockBitboard << 32;
-                pawnblockBitboard |= (pawnblockBitboard & NotAFileBitboard) << 7;
-                pawnblockBitboard |= (pawnblockBitboard & NotHFileBitboard) << 9;
-            } else {
+                pawnblockBitboard |= (pawnblockBitboard & Evaluator.NotAFileBitboard) << 7;
+                pawnblockBitboard |= (pawnblockBitboard & Evaluator.NotHFileBitboard) << 9;
+            }
+            else
+            {
                 pawnblockBitboard |= pawnblockBitboard >> 8;
                 pawnblockBitboard |= pawnblockBitboard >> 16;
                 pawnblockBitboard |= pawnblockBitboard >> 32;
-                pawnblockBitboard |= (pawnblockBitboard & NotAFileBitboard) >> 9;
-                pawnblockBitboard |= (pawnblockBitboard & NotHFileBitboard) >> 7;
+                pawnblockBitboard |= (pawnblockBitboard & Evaluator.NotAFileBitboard) >> 9;
+                pawnblockBitboard |= (pawnblockBitboard & Evaluator.NotHFileBitboard) >> 7;
             }
             return pawnblockBitboard;
         }

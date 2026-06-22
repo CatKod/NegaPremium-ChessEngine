@@ -16,11 +16,8 @@ namespace NegaPremium
                     return new Human();
                 case "Nega Premium":
                     return new Engine();
-
-                // EXTENSION GUIDE: 
-                // When you finish creating the RandomBot.cs file, uncomment the 2 lines below:
-                // case "Random Bot": 
-                //     return new RandomBot();
+                case "Tactical Bot":
+                    return new TacticalBot();
 
                 default:
                     return new Human();
@@ -30,8 +27,7 @@ namespace NegaPremium
         // This list will automatically be populated into the UI (ComboBox)
         public static string[] GetAvailableModes()
         {
-            return new string[] { "Human", "Nega Premium" };
-            // When a new bot is added, change to: new string[] { "Human", "Nega Premium", "Random Bot" };
+            return new string[] { "Human", "Nega Premium", "Tactical Bot" };
         }
     }
 }

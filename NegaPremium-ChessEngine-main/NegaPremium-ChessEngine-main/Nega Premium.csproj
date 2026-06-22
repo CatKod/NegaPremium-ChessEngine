@@ -77,6 +77,8 @@
     <Compile Include="Source\Engine\NegaPremium\Search.cs" />
     <Compile Include="Source\Core\Colour.cs" />
     <Compile Include="Source\Position\Declarations.cs" />
+	<Compile Include="Source\Engine\TacticalBot\TacticalBot.cs" />
+	<Compile Include="Source\Engine\TacticalBot\PolyglotBook.cs" />
     <Compile Include="Source\Position\FEN.cs" />
     <Compile Include="Source\Position\Position.cs" />
     <Compile Include="Source\Position\MakeUnmake.cs" />
@@ -88,7 +90,7 @@
     <Compile Include="Source\Gameplay\Restrictions.cs" />
     <Compile Include="Source\Core\Attack.cs" />
     <Compile Include="Source\Core\Bit.cs" />
-    <Compile Include="Source\Engine\NegaPremium\Evaluation.cs" />
+	<Compile Include="Source\Engine\Shared\Evaluator.cs" />
     <Compile Include="Source\Interface\Launch.cs" />
     <Compile Include="Source\Utilities\Stringify.cs" />
     <Compile Include="Source\Utilities\Native.cs" />
@@ -187,6 +189,11 @@
     <Content Include="images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Books\komodo.bin">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

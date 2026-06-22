@@ -72,7 +72,7 @@ namespace NegaPremium {
         /// <returns>The best move as determined by the engine.</returns>
         public Int32 GetMove(Position position) {
             if (Restrictions.Output == OutputType.GUI) {
-                Terminal.Clear();
+                //Terminal.Clear();
                 Terminal.WriteLine(PVFormat, "Depth", "Value", "Principal Variation");
                 Terminal.WriteLine("-----------------------------------------------------------------------");
             }
@@ -117,7 +117,7 @@ namespace NegaPremium {
                     String.Format("Hash cutoffs       {0:0.00 %}", (Double)_hashCutoffs / Math.Max(_hashProbes, 1)),
                     String.Format("Hash move found    {0:0.00 %}", (Double)_hashMoveMatches / Math.Max(_hashMoveChecks, 1)),
                     String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
-                    String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluate(position) / 100.0)));
+                    String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
                 Terminal.WriteLine();
             }
             return move;

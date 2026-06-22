@@ -148,7 +148,7 @@ namespace NegaPremium {
                     Bitboard[colour] |= 1UL << square;
                     OccupiedBitboard |= 1UL << square;
                     if ((Square[square] & Piece.Mask) != Piece.King)
-                        Material[colour] += Engine.PieceValue[Square[square]];
+                        Material[colour] += Evaluator.PieceValue[Square[square]];
                 }
 
             // Initialize Zobrist key and history. 

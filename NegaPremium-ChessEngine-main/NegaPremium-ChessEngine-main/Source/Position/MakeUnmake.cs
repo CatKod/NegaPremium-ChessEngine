@@ -52,7 +52,7 @@ namespace NegaPremium {
                     Bitboard[1 - SideToMove] ^= 1UL << to;
                     OccupiedBitboard |= 1UL << to;
                     ZobristKey ^= Zobrist.PiecePosition[capture][to];
-                    Material[1 - SideToMove] -= Engine.PieceValue[capture];
+                    Material[1 - SideToMove] -= Evaluator.PieceValue[capture];
                     FiftyMovesClock = 0;
                     break;
             }
@@ -117,7 +117,7 @@ namespace NegaPremium {
                     Bitboard[1 - SideToMove] ^= 1UL << (File(to) + Rank(from) * 8);
                     OccupiedBitboard ^= 1UL << (File(to) + Rank(from) * 8);
                     ZobristKey ^= Zobrist.PiecePosition[special][File(to) + Rank(from) * 8];
-                    Material[1 - SideToMove] -= Engine.PieceValue[special];
+                    Material[1 - SideToMove] -= Evaluator.PieceValue[special];
                     break;
                 // Handle pawn promotion.
                 default:
@@ -125,7 +125,7 @@ namespace NegaPremium {
                     Bitboard[special] ^= 1UL << to;
                     ZobristKey ^= Zobrist.PiecePosition[piece][to];
                     ZobristKey ^= Zobrist.PiecePosition[special][to];
-                    Material[SideToMove] += Engine.PieceValue[special] - Engine.PieceValue[piece];
+                    Material[SideToMove] += Evaluator.PieceValue[special] - Evaluator.PieceValue[piece];
                     Square[to] = special;
                     break;
             }
@@ -175,7 +175,7 @@ namespace NegaPremium {
                     Bitboard[capture] ^= 1UL << to;
                     Bitboard[1 - SideToMove] ^= 1UL << to;
                     OccupiedBitboard |= 1UL << to;
-                    Material[1 - SideToMove] += Engine.PieceValue[capture];
+                    Material[1 - SideToMove] += Evaluator.PieceValue[capture];
                     break;
             }
 
@@ -222,13 +222,13 @@ namespace NegaPremium {
                     Bitboard[special] ^= 1UL << (File(to) + Rank(from) * 8);
                     Bitboard[1 - SideToMove] ^= 1UL << (File(to) + Rank(from) * 8);
                     OccupiedBitboard ^= 1UL << (File(to) + Rank(from) * 8);
-                    Material[1 - SideToMove] += Engine.PieceValue[special];
+                    Material[1 - SideToMove] += Evaluator.PieceValue[special];
                     break;
                 // Rewind pawn promotion.
                 default:
                     Bitboard[piece] ^= 1UL << to;
                     Bitboard[special] ^= 1UL << to;
-                    Material[SideToMove] -= Engine.PieceValue[special] - Engine.PieceValue[piece];
+                    Material[SideToMove] -= Evaluator.PieceValue[special] - Evaluator.PieceValue[piece];
                     break;
             }
         }

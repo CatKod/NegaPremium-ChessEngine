@@ -63,7 +63,7 @@ namespace NegaPremium
             cboBlack.Location = new Point(15, 30);
             cboBlack.Width = 135;
             cboBlack.Items.AddRange(PlayerFactory.GetAvailableModes());
-            cboBlack.SelectedIndex = 1; // Default is Nega Premium.
+            cboBlack.SelectedIndex = 0;
             blackPanel.Controls.Add(cboBlack);
         }
 
