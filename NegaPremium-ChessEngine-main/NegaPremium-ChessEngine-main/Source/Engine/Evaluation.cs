@@ -57,6 +57,7 @@ namespace NegaPremium {
 
                 while (pieceBitboard != 0) {
                     square = Bit.Pop(ref pieceBitboard);
+                    value += opening * BishopOpeningMaterialValue;
                     value += BishopPositionValue[colour][square];
 
                     UInt64 pseudoMoveBitboard = Attack.Bishop(square, position.OccupiedBitboard);
@@ -70,6 +71,7 @@ namespace NegaPremium {
                 pieceBitboard = bitboard[colour | Piece.Knight];
                 while (pieceBitboard != 0) {
                     square = Bit.Pop(ref pieceBitboard);
+                    value += endgame * KnightEndgameMaterialValue;
                     value += opening * KnightOpeningPositionValue[colour][square];
                     value += endgame * KnightToEnemyKingSpatialValue[square][enemyKingSquare];
 

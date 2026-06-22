@@ -70,9 +70,11 @@ namespace NegaPremium {
         public Int32 QueenMobilityValue = 1;
 
         public Int32 BishopPairValue = 29;
+        public Int32 BishopOpeningMaterialValue = 20;
         public Int32[] BishopMobilityValue = { -25, -12, -3, 0, 2, 5, 8, 10, 12, 13, 15, 17, 18, 18 };
 
         public Int32[][] KnightToEnemyKingSpatialValue = new Int32[64][];
+        public Int32 KnightEndgameMaterialValue = 20;
         public Int32[] KnightDistanceToEnemyKingValue = { 0, 8, 8, 6, 4, 0, -4, -6, -8, -10, -12, -13, -15, -17, -25 };
         public Int32[] KnightMovesToEnemyKingValue = { 0, 21, 8, 0, -4, -8, -12 };
         public Int32[] KnightMobilityValue = { -21, -8, -2, 0, 2, 5, 8, 10, 12 };
@@ -144,10 +146,10 @@ namespace NegaPremium {
             // Initialize piece values. The king's value is only used for static 
             // exchange evaluation. 
             PieceValue[Piece.King] = 3000;
-            PieceValue[Piece.Queen] = 1025;
-            PieceValue[Piece.Rook] = 575;
-            PieceValue[Piece.Bishop] = 370;
-            PieceValue[Piece.Knight] = 350;
+            PieceValue[Piece.Queen] = 900;
+            PieceValue[Piece.Rook] = 500;
+            PieceValue[Piece.Bishop] = 300;
+            PieceValue[Piece.Knight] = 300;
             PieceValue[Piece.Pawn] = 100;
             for (Int32 piece = Piece.Min; piece <= Piece.Max; piece += 2)
                 PieceValue[Colour.Black | piece] = PieceValue[piece];
