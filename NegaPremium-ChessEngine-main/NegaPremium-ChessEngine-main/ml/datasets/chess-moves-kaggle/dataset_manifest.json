@@ -1,0 +1,35 @@
+{
+  "name": "Predicting Pro Chess Moves",
+  "kaggle_ref": "dev102/predicting-pro-chess-moves",
+  "source_url": "https://www.kaggle.com/datasets/dev102/predicting-pro-chess-moves",
+  "source_metadata_captured_at": "2026-06-22",
+  "license": "CC0: Public Domain",
+  "task": "best_move_prediction",
+  "position_format": "FEN",
+  "move_format": "UCI",
+  "expected_columns": [
+    "FEN",
+    "Move"
+  ],
+  "raw_total_bytes": 673221802,
+  "raw_data_committed": false,
+  "matrix_output": {
+    "script": "ml/scripts/build_chess_move_matrix_dataset.py",
+    "default_max_rows": 50000,
+    "full_dataset_command": "python ml/scripts/build_chess_move_matrix_dataset.py --max-rows 0 --shard-size 50000 --skip-download --overwrite",
+    "default_planes": 18,
+    "output_path": "ml/datasets/chess-moves-kaggle/processed/matrix/chess_move_matrices_50000_p18.npz",
+    "full_shards_path": "ml/datasets/chess-moves-kaggle/processed/matrix/shards_all_p18_n50000",
+    "split_command": "python ml/scripts/split_chess_move_shards.py --overwrite",
+    "split_path": "ml/datasets/chess-moves-kaggle/processed/matrix/splits_80_10_10_p18_n50000",
+    "split_rows": {
+      "train": 8965932,
+      "val": 1100000,
+      "test": 1100000
+    },
+    "matrix_key": "x",
+    "label_key": "y",
+    "policy_label_count": 20480,
+    "label_encoding": "y = ((from_square * 64) + to_square) * 5 + promotion_index"
+  }
+}

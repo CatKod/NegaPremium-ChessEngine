@@ -1,4 +1,4 @@
-﻿namespace NegaPremium {
+namespace NegaPremium {
     partial class Settings {
         /// <summary>
         /// Required designer variable.
@@ -30,17 +30,27 @@
             this.blackPanel = new System.Windows.Forms.GroupBox();
             this.blackComputer = new System.Windows.Forms.RadioButton();
             this.blackHuman = new System.Windows.Forms.RadioButton();
+            this.whiteSearchPanel = new System.Windows.Forms.GroupBox();
+            this.whiteClassicMode = new System.Windows.Forms.RadioButton();
+            this.whiteHillMode = new System.Windows.Forms.RadioButton();
+            this.whiteHillClimbingv2Mode = new System.Windows.Forms.RadioButton();
+            this.blackSearchPanel = new System.Windows.Forms.GroupBox();
+            this.blackClassicMode = new System.Windows.Forms.RadioButton();
+            this.blackHillMode = new System.Windows.Forms.RadioButton();
+            this.blackHillClimbingv2Mode = new System.Windows.Forms.RadioButton();
             this.whitePanel.SuspendLayout();
             this.blackPanel.SuspendLayout();
+            this.whiteSearchPanel.SuspendLayout();
+            this.blackSearchPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // start
             // 
             this.start.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.start.Location = new System.Drawing.Point(11, 98);
+            this.start.Location = new System.Drawing.Point(12, 98);
             this.start.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.start.Name = "start";
-            this.start.Size = new System.Drawing.Size(272, 33);
+            this.start.Size = new System.Drawing.Size(452, 33);
             this.start.TabIndex = 0;
             this.start.Text = "Start";
             this.start.UseVisualStyleBackColor = true;
@@ -55,7 +65,7 @@
             this.whitePanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.whitePanel.Name = "whitePanel";
             this.whitePanel.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.whitePanel.Size = new System.Drawing.Size(129, 80);
+            this.whitePanel.Size = new System.Drawing.Size(212, 80);
             this.whitePanel.TabIndex = 2;
             this.whitePanel.TabStop = false;
             this.whitePanel.Text = "White";
@@ -91,11 +101,11 @@
             this.blackPanel.Controls.Add(this.blackComputer);
             this.blackPanel.Controls.Add(this.blackHuman);
             this.blackPanel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.blackPanel.Location = new System.Drawing.Point(152, 10);
+            this.blackPanel.Location = new System.Drawing.Point(248, 10);
             this.blackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.blackPanel.Name = "blackPanel";
             this.blackPanel.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.blackPanel.Size = new System.Drawing.Size(129, 80);
+            this.blackPanel.Size = new System.Drawing.Size(212, 80);
             this.blackPanel.TabIndex = 3;
             this.blackPanel.TabStop = false;
             this.blackPanel.Text = "Black";
@@ -126,11 +136,107 @@
             this.blackHuman.Text = "Human";
             this.blackHuman.UseVisualStyleBackColor = true;
             // 
+            // searchPanel
+            // 
+            this.whiteSearchPanel.Controls.Add(this.whiteClassicMode);
+            this.whiteSearchPanel.Controls.Add(this.whiteHillMode);
+            this.whiteSearchPanel.Controls.Add(this.whiteHillClimbingv2Mode);
+            this.blackSearchPanel.Controls.Add(this.blackClassicMode);
+            this.blackSearchPanel.Controls.Add(this.blackHillMode);
+            this.blackSearchPanel.Controls.Add(this.blackHillClimbingv2Mode);
+            this.whiteSearchPanel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.whiteSearchPanel.Location = new System.Drawing.Point(12, 140);
+            this.whiteSearchPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.whiteSearchPanel.Name = "whiteSearchPanel";
+            this.whiteSearchPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.whiteSearchPanel.Size = new System.Drawing.Size(212, 112);
+            this.whiteSearchPanel.TabIndex = 4;
+            this.whiteSearchPanel.TabStop = false;
+            this.whiteSearchPanel.Text = "White Search Mode";
+            // 
+            // whiteClassicMode
+            // 
+            this.whiteClassicMode.AutoSize = true;
+            this.whiteClassicMode.Checked = true;
+            this.whiteClassicMode.Location = new System.Drawing.Point(13, 21);
+            this.whiteClassicMode.Name = "whiteClassicMode";
+            this.whiteClassicMode.Size = new System.Drawing.Size(161, 24);
+            this.whiteClassicMode.TabIndex = 0;
+            this.whiteClassicMode.TabStop = true;
+            this.whiteClassicMode.Text = "Nega Premium";
+            this.whiteClassicMode.UseVisualStyleBackColor = true;
+            // 
+            // whiteHillMode
+            // 
+            this.whiteHillMode.AutoSize = true;
+            this.whiteHillMode.Location = new System.Drawing.Point(13, 48);
+            this.whiteHillMode.Name = "whiteHillMode";
+            this.whiteHillMode.Size = new System.Drawing.Size(165, 24);
+            this.whiteHillMode.TabIndex = 1;
+            this.whiteHillMode.Text = "Hill Climbing";
+            this.whiteHillMode.UseVisualStyleBackColor = true;
+            // 
+            // whiteHillClimbingv2Mode
+            // 
+            this.whiteHillClimbingv2Mode.AutoSize = true;
+            this.whiteHillClimbingv2Mode.Location = new System.Drawing.Point(13, 75);
+            this.whiteHillClimbingv2Mode.Name = "whiteHillClimbingv2Mode";
+            this.whiteHillClimbingv2Mode.Size = new System.Drawing.Size(165, 24);
+            this.whiteHillClimbingv2Mode.TabIndex = 2;
+            this.whiteHillClimbingv2Mode.Text = "HillClimbingv2";
+            this.whiteHillClimbingv2Mode.UseVisualStyleBackColor = true;
+            // 
+            // blackSearchPanel
+            // 
+            this.blackSearchPanel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.blackSearchPanel.Location = new System.Drawing.Point(248, 140);
+            this.blackSearchPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.blackSearchPanel.Name = "blackSearchPanel";
+            this.blackSearchPanel.Padding = new System.Windows.Forms.Padding(4);
+            this.blackSearchPanel.Size = new System.Drawing.Size(212, 112);
+            this.blackSearchPanel.TabIndex = 5;
+            this.blackSearchPanel.TabStop = false;
+            this.blackSearchPanel.Text = "Black Search Mode";
+            // 
+            // blackClassicMode
+            // 
+            this.blackClassicMode.AutoSize = true;
+            this.blackClassicMode.Checked = true;
+            this.blackClassicMode.Location = new System.Drawing.Point(13, 21);
+            this.blackClassicMode.Name = "blackClassicMode";
+            this.blackClassicMode.Size = new System.Drawing.Size(161, 24);
+            this.blackClassicMode.TabIndex = 0;
+            this.blackClassicMode.TabStop = true;
+            this.blackClassicMode.Text = "Nega Premium";
+            this.blackClassicMode.UseVisualStyleBackColor = true;
+            // 
+            // blackHillMode
+            // 
+            this.blackHillMode.AutoSize = true;
+            this.blackHillMode.Location = new System.Drawing.Point(13, 48);
+            this.blackHillMode.Name = "blackHillMode";
+            this.blackHillMode.Size = new System.Drawing.Size(165, 24);
+            this.blackHillMode.TabIndex = 1;
+            this.blackHillMode.Text = "Hill Climbing";
+            this.blackHillMode.UseVisualStyleBackColor = true;
+            // 
+            // blackHillClimbingv2Mode
+            // 
+            this.blackHillClimbingv2Mode.AutoSize = true;
+            this.blackHillClimbingv2Mode.Location = new System.Drawing.Point(13, 75);
+            this.blackHillClimbingv2Mode.Name = "blackHillClimbingv2Mode";
+            this.blackHillClimbingv2Mode.Size = new System.Drawing.Size(165, 24);
+            this.blackHillClimbingv2Mode.TabIndex = 2;
+            this.blackHillClimbingv2Mode.Text = "HillClimbingv2";
+            this.blackHillClimbingv2Mode.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 140);
+            this.ClientSize = new System.Drawing.Size(473, 266);
+            this.Controls.Add(this.blackSearchPanel);
+            this.Controls.Add(this.whiteSearchPanel);
             this.Controls.Add(this.blackPanel);
             this.Controls.Add(this.whitePanel);
             this.Controls.Add(this.start);
@@ -146,6 +252,10 @@
             this.whitePanel.PerformLayout();
             this.blackPanel.ResumeLayout(false);
             this.blackPanel.PerformLayout();
+            this.whiteSearchPanel.ResumeLayout(false);
+            this.whiteSearchPanel.PerformLayout();
+            this.blackSearchPanel.ResumeLayout(false);
+            this.blackSearchPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -159,5 +269,13 @@
         private System.Windows.Forms.GroupBox blackPanel;
         private System.Windows.Forms.RadioButton blackComputer;
         private System.Windows.Forms.RadioButton blackHuman;
+        private System.Windows.Forms.GroupBox whiteSearchPanel;
+        private System.Windows.Forms.RadioButton whiteClassicMode;
+        private System.Windows.Forms.RadioButton whiteHillMode;
+        private System.Windows.Forms.RadioButton whiteHillClimbingv2Mode;
+        private System.Windows.Forms.GroupBox blackSearchPanel;
+        private System.Windows.Forms.RadioButton blackClassicMode;
+        private System.Windows.Forms.RadioButton blackHillMode;
+        private System.Windows.Forms.RadioButton blackHillClimbingv2Mode;
     }
 }

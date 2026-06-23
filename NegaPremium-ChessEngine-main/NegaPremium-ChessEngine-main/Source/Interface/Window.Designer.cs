@@ -1,4 +1,4 @@
-﻿namespace NegaPremium {
+namespace NegaPremium {
     partial class Window {
         /// <summary>
         /// Required designer variable.
@@ -41,6 +41,9 @@
             this.searchNodesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multiPVMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.classicModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hillClimbingModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateBoardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -157,7 +160,8 @@
             this.searchDepthMenuItem,
             this.searchNodesMenuItem,
             this.hashSizeMenuItem,
-            this.multiPVMenuItem});
+            this.multiPVMenuItem,
+            this.searchModeMenuItem});
             this.engineMenu.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.engineMenu.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.engineMenu.Name = "engineMenu";
@@ -198,6 +202,29 @@
             this.multiPVMenuItem.Size = new System.Drawing.Size(162, 26);
             this.multiPVMenuItem.Text = "Multi PV";
             this.multiPVMenuItem.Click += new System.EventHandler(this.MultiPVClick);
+            // 
+            // searchModeMenuItem
+            // 
+            this.searchModeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.classicModeMenuItem,
+            this.hillClimbingModeMenuItem});
+            this.searchModeMenuItem.Name = "searchModeMenuItem";
+            this.searchModeMenuItem.Size = new System.Drawing.Size(162, 26);
+            this.searchModeMenuItem.Text = "Search Mode";
+            // 
+            // classicModeMenuItem
+            // 
+            this.classicModeMenuItem.Name = "classicModeMenuItem";
+            this.classicModeMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.classicModeMenuItem.Text = "Classic";
+            this.classicModeMenuItem.Click += new System.EventHandler(this.ClassicModeClick);
+            // 
+            // hillClimbingModeMenuItem
+            // 
+            this.hillClimbingModeMenuItem.Name = "hillClimbingModeMenuItem";
+            this.hillClimbingModeMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.hillClimbingModeMenuItem.Text = "Hill Climbing";
+            this.hillClimbingModeMenuItem.Click += new System.EventHandler(this.HillClimbingModeClick);
             // 
             // displayMenu
             // 
@@ -279,5 +306,8 @@
         private System.Windows.Forms.ToolStripMenuItem searchDepthMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchNodesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem multiPVMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem searchModeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem classicModeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hillClimbingModeMenuItem;
     }
 }

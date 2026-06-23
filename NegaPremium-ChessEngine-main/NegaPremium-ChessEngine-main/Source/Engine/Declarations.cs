@@ -1,10 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 
 namespace NegaPremium {
+
+    public enum SearchMode {
+        Classic,
+        HillClimbing,
+        HillClimbingv2
+    }
 
     /// <summary>
     /// Encapsulates the declarations component of the Nega Premium chess 
@@ -55,28 +61,41 @@ namespace NegaPremium {
         // Evaluation constants. 
         public Int32 KingOnOpenFileValue = -58;
         public Int32 KingAdjacentToOpenFileValue = -42;
+        public Int32 PawnKingAttackValue = 2;
+        public Int32 MinorKingAttackValue = 3;
+        public Int32 RookKingAttackValue = 4;
+        public Int32 QueenKingAttackValue = 2;
 
         public Int32[][] QueenToEnemyKingSpatialValue = new Int32[64][];
         public Int32[] QueenDistanceToEnemyKingValue = { 0, 17, 8, 4, 0, -4, -8, -12 };
+        public Int32 QueenMobilityValue = 1;
 
         public Int32 BishopPairValue = 29;
+        public Int32 BishopOpeningMaterialValue = 20;
         public Int32[] BishopMobilityValue = { -25, -12, -3, 0, 2, 5, 8, 10, 12, 13, 15, 17, 18, 18 };
 
         public Int32[][] KnightToEnemyKingSpatialValue = new Int32[64][];
+        public Int32 KnightEndgameMaterialValue = 20;
         public Int32[] KnightDistanceToEnemyKingValue = { 0, 8, 8, 6, 4, 0, -4, -6, -8, -10, -12, -13, -15, -17, -25 };
         public Int32[] KnightMovesToEnemyKingValue = { 0, 21, 8, 0, -4, -8, -12 };
         public Int32[] KnightMobilityValue = { -21, -8, -2, 0, 2, 5, 8, 10, 12 };
+
+        public Int32 RookOpenFileValue = 18;
+        public Int32 RookSemiOpenFileValue = 9;
+        public Int32 RookMobilityValue = 2;
 
         public Int32 PawnEndgameGainValue = 17;
         public Int32 PawnNearKingValue = 14;
         public Int32 DoubledPawnValue = -21;
         public Int32 IsolatedPawnValue = -17;
         public Int32 PassedPawnValue = 25;
+        public Int32[] PassedPawnAdvanceValue = { 0, 0, 2, 6, 14, 28, 50, 0 };
         public Int32 PawnAttackValue = 17;
         public Int32 PawnDefenceValue = 6;
         public Int32 PawnDeficiencyValue = -29;
 
         public static readonly Int32[] PieceValue = new Int32[14];
+        public Int32 CenterControlValue = 5;
         public Int32 TempoValue = 6;
 
         private static readonly UInt64[] PawnShieldBitboard = new UInt64[64];
@@ -85,6 +104,7 @@ namespace NegaPremium {
         private static readonly UInt64[][] ShortForwardFileBitboard = { new UInt64[64], new UInt64[64] };
         private const UInt64 NotAFileBitboard = 0xFEFEFEFEFEFEFEFEUL;
         private const UInt64 NotHFileBitboard = 0x7F7F7F7F7F7F7F7FUL;
+        private const UInt64 CenterBitboard = (1UL << 27) | (1UL << 28) | (1UL << 35) | (1UL << 36);
 
         private static readonly Int32[][] RectilinearDistance = new Int32[64][];
         private static readonly Int32[][] ChebyshevDistance = new Int32[64][];
@@ -97,6 +117,7 @@ namespace NegaPremium {
         private readonly Int32[][] _pvMoves = new Int32[PlyLimit][];
         private readonly Int32[] _pvLength = new Int32[PlyLimit];
         private readonly Int32[][] _killerMoves = new Int32[PlyLimit][];
+        private readonly Int32[,] _historyMoves = new Int32[2, MovesLimit];
         private readonly Single[] _moveValues = new Single[MovesLimit];
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private Boolean _abortSearch = true;
@@ -126,10 +147,10 @@ namespace NegaPremium {
             // Initialize piece values. The king's value is only used for static 
             // exchange evaluation. 
             PieceValue[Piece.King] = 3000;
-            PieceValue[Piece.Queen] = 1025;
-            PieceValue[Piece.Rook] = 575;
-            PieceValue[Piece.Bishop] = 370;
-            PieceValue[Piece.Knight] = 350;
+            PieceValue[Piece.Queen] = 900;
+            PieceValue[Piece.Rook] = 500;
+            PieceValue[Piece.Bishop] = 300;
+            PieceValue[Piece.Knight] = 300;
             PieceValue[Piece.Pawn] = 100;
             for (Int32 piece = Piece.Min; piece <= Piece.Max; piece += 2)
                 PieceValue[Colour.Black | piece] = PieceValue[piece];
