@@ -12,6 +12,7 @@ namespace NegaPremium {
         private const Double HillClimbingStopMargin = 0.20;
         private const Int32 HillClimbingQuiescenceLimit = 8;
         private const Int32 HillClimbingMateScore = CheckmateValue;
+        private const Int32 HillClimbingMateDistanceOffset = 1;
         private const Int32 HillClimbingLateMoveReductionDepth = 3;
         private const Int32 HillClimbingLateMoveReductionMove = 3;
         private const Int32 HillClimbingNullMoveReduction = 2;
@@ -52,7 +53,7 @@ namespace NegaPremium {
                 Int32 localAlpha = alpha;
                 Int32 localBeta = beta;
 
-                OrderMoves(rootMoves, ply);
+                OrderMoves(position, rootMoves, ply);
 
                 for (Int32 i = 0; i < rootMoves.Count; i++) {
                     if (TimeExpired()) {
@@ -63,15 +64,15 @@ namespace NegaPremium {
                     Int32 move = rootMoves[i];
                     position.Make(move);
 
-                    Int32 value;
                     Boolean childInCheck = position.InCheck(position.SideToMove);
-                    if (currentDepth > 1)
-                        value = -SearchNode(position, currentDepth - 1, ply + 1, -localBeta, -localAlpha, childInCheck);
-                    else
-                        value = -Evaluator.Evaluate(position);
-
-                    if (IsExactMate(position, childInCheck))
-                        value = Math.Max(value, CheckmateValue - currentDepth);
+                    Int32 value = GetTerminalScore(position, childInCheck, ply + 1);
+                    if (value == Int32.MinValue)
+                    {
+                        if (currentDepth > 1)
+                            value = -SearchNode(position, currentDepth - 1, ply + 1, -localBeta, -localAlpha, childInCheck);
+                        else
+                            value = -Evaluator.Evaluate(position);
+                    }
 
                     position.Unmake(move);
 
@@ -141,9 +142,9 @@ namespace NegaPremium {
 
             List<Int32> moves = position.LegalMoves();
             if (moves.Count == 0)
-                return Evaluator.Evaluate(position);
+                return inCheck ? -CheckmateValue + ply : 0;
 
-            OrderMoves(moves, ply);
+            OrderMoves(position, moves, ply);
 
             if (CanApplyNullMove(position, inCheck, depth)) {
                 position.MakeNull();
@@ -177,8 +178,9 @@ namespace NegaPremium {
                 if (value > alpha)
                     value = -SearchNode(position, depth - 1, ply + 1, -beta, -alpha, childInCheck);
 
-                if (IsExactMate(position, childInCheck))
-                    value = Math.Max(value, CheckmateValue - (ply + 1));
+                Int32 terminalScore = GetTerminalScore(position, childInCheck, ply + 1);
+                if (terminalScore != Int32.MinValue)
+                    value = Math.Max(value, terminalScore);
                 position.Unmake(move);
 
                 if (value > bestValue)
@@ -217,9 +219,9 @@ namespace NegaPremium {
 
             List<Int32> moves = position.LegalMoves();
             if (moves.Count == 0)
-                return standPat;
+                return inCheck ? -CheckmateValue + ply : 0;
 
-            OrderMoves(moves, ply);
+            OrderMoves(position, moves, ply);
 
             Int32 bestValue = standPat;
             for (Int32 i = 0; i < moves.Count; i++) {
@@ -229,7 +231,7 @@ namespace NegaPremium {
                 }
 
                 Int32 move = moves[i];
-                Boolean tactical = inCheck || Move.IsCapture(move) || Move.IsPromotion(move) || Move.IsEnPassant(move);
+                Boolean tactical = inCheck || position.CausesCheck(move) || Move.IsCapture(move) || Move.IsPromotion(move) || Move.IsEnPassant(move);
                 if (!tactical)
                     continue;
 
@@ -253,16 +255,19 @@ namespace NegaPremium {
             return _stopwatch.IsRunning && _stopwatch.Elapsed.TotalSeconds >= HillClimbingTargetTimeLimit - HillClimbingStopMargin;
         }
 
-        private static void OrderMoves(List<Int32> moves, Int32 ply) {
-            moves.Sort((left, right) => MoveOrderingScore(right, ply).CompareTo(MoveOrderingScore(left, ply)));
+        private static void OrderMoves(Position position, List<Int32> moves, Int32 ply) {
+            moves.Sort((left, right) => MoveOrderingScore(position, right, ply).CompareTo(MoveOrderingScore(position, left, ply)));
         }
 
-        private static Boolean IsExactMate(Position position, Boolean inCheck) {
+        private static Int32 GetTerminalScore(Position position, Boolean inCheck, Int32 ply) {
             if (position == null)
-                return false;
+                return Int32.MinValue;
 
             List<Int32> legalMoves = position.LegalMoves();
-            return legalMoves.Count == 0 && inCheck;
+            if (legalMoves.Count == 0)
+                return inCheck ? -CheckmateValue + ply : 0;
+
+            return Int32.MinValue;
         }
 
         private static Boolean CanApplyNullMove(Position position, Boolean inCheck, Int32 depth) {
@@ -303,8 +308,8 @@ namespace NegaPremium {
             if (Restrictions.Output != OutputType.GUI)
                 return;
 
-            String valueText = value >= CheckmateValue
-                ? "+Mate " + Math.Max(1, (CheckmateValue - value + 1) / 2)
+            String valueText = Math.Abs(value) >= CheckmateValue - 1000
+                ? (value > 0 ? "+Mate " : "-Mate ") + Math.Max(1, (CheckmateValue - Math.Abs(value) + HillClimbingMateDistanceOffset) / 2)
                 : String.Format("{0:+0.00;-0.00}", value / 100.0);
 
             Terminal.WriteLine("{0,-7}{1,-9}{2}", depth, valueText, principalVariation);
@@ -343,7 +348,7 @@ namespace NegaPremium {
             }
         }
 
-        private static Int32 MoveOrderingScore(Int32 move, Int32 ply) {
+        private static Int32 MoveOrderingScore(Position position, Int32 move, Int32 ply) {
             Int32 score = 0;
 
             if (Move.IsPromotion(move))
@@ -354,6 +359,9 @@ namespace NegaPremium {
                 Int32 piece = Move.Piece(move);
                 score += 500_000 + Evaluator.PieceValue[captured] * 16 - Evaluator.PieceValue[piece];
             }
+
+            if (position != null && position.CausesCheck(move))
+                score += 750_000;
 
             if (Move.IsEnPassant(move))
                 score += 400_000;
