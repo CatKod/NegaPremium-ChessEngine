@@ -79,6 +79,7 @@
     <Compile Include="Source\Position\Declarations.cs" />
 	<Compile Include="Source\Engine\TacticalBot\TacticalBot.cs" />
 	<Compile Include="Source\Engine\TacticalBot\PolyglotBook.cs" />
+	<Compile Include="Source\Engine\MCTSBot\HeuristicMCTSBot.cs" />
     <Compile Include="Source\Position\FEN.cs" />
     <Compile Include="Source\Position\Position.cs" />
     <Compile Include="Source\Position\MakeUnmake.cs" />

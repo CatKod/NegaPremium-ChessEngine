@@ -18,7 +18,8 @@ namespace NegaPremium
                     return new Engine();
                 case "Tactical Bot":
                     return new TacticalBot();
-
+                case "Heuristic MCTS":
+                    return new HeuristicMCTSBot();
                 default:
                     return new Human();
             }
@@ -27,7 +28,7 @@ namespace NegaPremium
         // This list will automatically be populated into the UI (ComboBox)
         public static string[] GetAvailableModes()
         {
-            return new string[] { "Human", "Nega Premium", "Tactical Bot" };
+            return new string[] { "Human", "Nega Premium", "Tactical Bot", "Heuristic MCTS" };
         }
     }
 }
