@@ -14,6 +14,11 @@ namespace NegaPremium {
         String Name { get; }
 
         /// <summary>
+        /// Distinguish between AI and humans
+        /// </summary>
+        Boolean IsAI { get; }
+
+        /// <summary>
         /// Whether the player is willing to accept a draw offer. 
         /// </summary>
         Boolean AcceptsDraw { get; }

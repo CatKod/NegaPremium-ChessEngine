@@ -57,6 +57,16 @@ namespace NegaPremium {
         }
 
         /// <summary>
+        /// Human is not AI. 
+        /// </summary>
+        public Boolean IsAI
+        {
+            get { 
+                return false; 
+            }
+        }
+
+        /// <summary>
         /// Whether the player is willing to accept a draw offer. 
         /// </summary>
         public Boolean AcceptsDraw {

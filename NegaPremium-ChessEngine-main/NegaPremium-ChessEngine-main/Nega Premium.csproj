@@ -77,11 +77,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\Engine\Engine.cs" />
-    <Compile Include="Source\Engine\PV.cs" />
-    <Compile Include="Source\Engine\Search.cs" />
+    <Compile Include="Source\Engine\NegaPremium\Engine.cs" />
+    <Compile Include="Source\Engine\NegaPremium\PV.cs" />
+    <Compile Include="Source\Engine\NegaPremium\Search.cs" />
     <Compile Include="Source\Core\Colour.cs" />
     <Compile Include="Source\Position\Declarations.cs" />
+	<Compile Include="Source\Engine\TacticalBot\TacticalBot.cs" />
+	<Compile Include="Source\Engine\TacticalBot\PolyglotBook.cs" />
+	<Compile Include="Source\Engine\MCTSBot\HeuristicMCTSBot.cs" />
     <Compile Include="Source\Position\FEN.cs" />
     <Compile Include="Source\Position\Position.cs" />
     <Compile Include="Source\Position\MakeUnmake.cs" />
@@ -97,10 +100,12 @@
     <Compile Include="Source\Engine\HillClimbing.cs" />
     <Compile Include="Source\Engine\HillClimbingv2.cs" />
     <Compile Include="Source\Engine\Benchmark.cs" />
+	<Compile Include="Source\Engine\Shared\Evaluator.cs" />
     <Compile Include="Source\Interface\Launch.cs" />
     <Compile Include="Source\Utilities\Stringify.cs" />
     <Compile Include="Source\Utilities\Native.cs" />
     <Compile Include="Source\Core\Piece.cs" />
+	<Compile Include="Source\Gameplay\PlayerFactory.cs" />
     <Compile Include="Source\Interface\SelectionBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,7 +139,7 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Utilities\Random.cs" />
-    <Compile Include="Source\Engine\Declarations.cs" />
+    <Compile Include="Source\Engine\NegaPremium\Declarations.cs" />
     <EmbeddedResource Include="Source\Interface\SelectionBox.resx">
       <DependentUpon>SelectionBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,6 +211,11 @@
     <Content Include="images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Books\komodo.bin">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
