@@ -42,8 +42,16 @@ namespace NegaPremium {
                 IPlayer white = whiteHuman.Checked ? new Human() : new Engine() as IPlayer;
                 IPlayer black = blackHuman.Checked ? new Human() : new Engine() as IPlayer;
 
-                SearchMode whiteMode = whiteHillMode.Checked ? SearchMode.HillClimbing : SearchMode.Classic;
-                SearchMode blackMode = blackHillMode.Checked ? SearchMode.HillClimbing : SearchMode.Classic;
+                SearchMode whiteMode = whiteHillMode.Checked
+                    ? SearchMode.HillClimbing
+                    : whiteHillClimbingv2Mode.Checked
+                        ? SearchMode.HillClimbingv2
+                        : SearchMode.Classic;
+                SearchMode blackMode = blackHillMode.Checked
+                    ? SearchMode.HillClimbing
+                    : blackHillClimbingv2Mode.Checked
+                        ? SearchMode.HillClimbingv2
+                        : SearchMode.Classic;
                 if (white is Engine whiteEngine)
                     whiteEngine.Mode = whiteMode;
                 if (black is Engine blackEngine)

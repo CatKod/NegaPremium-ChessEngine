@@ -8,7 +8,8 @@ namespace NegaPremium {
 
     public enum SearchMode {
         Classic,
-        HillClimbing
+        HillClimbing,
+        HillClimbingv2
     }
 
     /// <summary>

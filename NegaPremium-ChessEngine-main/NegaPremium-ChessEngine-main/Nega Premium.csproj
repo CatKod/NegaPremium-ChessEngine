@@ -97,6 +97,7 @@
     <Compile Include="Source\Core\Bit.cs" />
     <Compile Include="Source\Engine\Evaluation.cs" />
     <Compile Include="Source\Engine\HillClimbing.cs" />
+    <Compile Include="Source\Engine\HillClimbingv2.cs" />
     <Compile Include="Source\Engine\Benchmark.cs" />
     <Compile Include="Source\Interface\Launch.cs" />
     <Compile Include="Source\Utilities\Stringify.cs" />
@@ -179,6 +180,14 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.ML.OnnxRuntime">
+      <HintPath>D:\ProgramData\OnnxRuntime\microsoft.ml.onnxruntime.managed.1.27.0\lib\netstandard2.0\Microsoft.ML.OnnxRuntime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>D:\ProgramData\OnnxRuntime\system.memory.4.6.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
