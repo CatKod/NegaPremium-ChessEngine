@@ -68,7 +68,7 @@ namespace NegaPremium {
                     if (currentDepth > 1)
                         value = -SearchNode(position, currentDepth - 1, ply + 1, -localBeta, -localAlpha, childInCheck);
                     else
-                        value = -Evaluate(position);
+                        value = -Evaluator.Evaluate(position);
 
                     if (IsExactMate(position, childInCheck))
                         value = Math.Max(value, CheckmateValue - currentDepth);
@@ -116,8 +116,8 @@ namespace NegaPremium {
                     String.Format("Hash cutoffs       {0:0.00 %}", (Double)_hashCutoffs / Math.Max(_hashProbes, 1)),
                     String.Format("Hash move found    {0:0.00 %}", (Double)_hashMoveMatches / Math.Max(_hashMoveChecks, 1)),
                     String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
-                    String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluate(position) / 100.0)));
-                Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluate(position) / 100.0);
+                    String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
+                Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
                 Terminal.WriteLine();
             }
 
@@ -133,7 +133,7 @@ namespace NegaPremium {
 
             if (TimeExpired()) {
                 _abortSearch = true;
-                return Evaluate(position);
+                return Evaluator.Evaluate(position);
             }
 
             if (depth <= 0)
@@ -141,7 +141,7 @@ namespace NegaPremium {
 
             List<Int32> moves = position.LegalMoves();
             if (moves.Count == 0)
-                return Evaluate(position);
+                return Evaluator.Evaluate(position);
 
             OrderMoves(moves, ply);
 
@@ -189,7 +189,7 @@ namespace NegaPremium {
                     break;
             }
 
-            return bestValue == -Infinity ? Evaluate(position) : bestValue;
+            return bestValue == -Infinity ? Evaluator.Evaluate(position) : bestValue;
         }
 
         /// <summary>
@@ -201,13 +201,13 @@ namespace NegaPremium {
 
             if (TimeExpired()) {
                 _abortSearch = true;
-                return Evaluate(position);
+                return Evaluator.Evaluate(position);
             }
 
             if (ply >= HillClimbingQuiescenceLimit)
-                return Evaluate(position);
+                return Evaluator.Evaluate(position);
 
-            Int32 standPat = Evaluate(position);
+            Int32 standPat = Evaluator.Evaluate(position);
             if (!inCheck) {
                 if (standPat >= beta)
                     return standPat;
@@ -330,8 +330,8 @@ namespace NegaPremium {
                 String.Format("Quiescence limit   {0}", HillClimbingQuiescenceLimit),
                 String.Format("Stop margin        {0:0.00} s", HillClimbingStopMargin),
                 String.Format("Target time        {0:0.00} s", HillClimbingTargetTimeLimit),
-                String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluate(position) / 100.0)));
-            Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluate(position) / 100.0);
+                String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
+            Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
             Terminal.WriteLine();
         }
 
@@ -347,12 +347,12 @@ namespace NegaPremium {
             Int32 score = 0;
 
             if (Move.IsPromotion(move))
-                score += 1_000_000 + PieceValue[Move.Special(move)] * 32;
+                score += 1_000_000 + Evaluator.PieceValue[Move.Special(move)] * 32;
 
             if (Move.IsCapture(move)) {
                 Int32 captured = Move.Capture(move);
                 Int32 piece = Move.Piece(move);
-                score += 500_000 + PieceValue[captured] * 16 - PieceValue[piece];
+                score += 500_000 + Evaluator.PieceValue[captured] * 16 - Evaluator.PieceValue[piece];
             }
 
             if (Move.IsEnPassant(move))

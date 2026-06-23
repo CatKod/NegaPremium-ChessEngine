@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,6 +13,14 @@ namespace NegaPremium
     /// </summary>
     public sealed partial class Engine : IPlayer
     {
+        public enum SearchMode
+        {
+            Classic,
+            Tactical,
+            Mcts,
+            HillClimbing,
+            HillClimbingv2
+        }
 
         // ========================================================
         // 1. MISCELLANEOUS & FORMATTING / ĐỊNH DẠNG VÀ PHIÊN BẢN

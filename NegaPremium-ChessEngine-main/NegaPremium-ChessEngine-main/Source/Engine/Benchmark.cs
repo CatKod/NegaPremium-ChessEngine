@@ -35,7 +35,7 @@ namespace NegaPremium {
                         Int32 move = GetMove(copy);
                         stopwatch.Stop();
 
-                        Int32 evaluation = Evaluate(copy);
+                        Int32 evaluation = Evaluator.Evaluate(copy);
                         sb.AppendLine(String.Format(
                             "{0},\"{1}\",\"{2}\",{3:0.00},{4},{5}",
                             mode,

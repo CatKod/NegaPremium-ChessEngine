@@ -72,7 +72,7 @@ namespace NegaPremium {
                     Boolean childInCheck = position.InCheck(position.SideToMove);
                     Int32 value = currentDepth > 1
                         ? -SearchNodev2(position, currentDepth - 1, ply + 1, -localBeta, -localAlpha, childInCheck)
-                        : -Evaluate(position);
+                        : -Evaluator.Evaluate(position);
 
                     if (IsExactMateV2(position, childInCheck))
                         value = Math.Max(value, CheckmateValue - currentDepth);
@@ -114,7 +114,7 @@ namespace NegaPremium {
 
             if (TimeExpired()) {
                 _abortSearch = true;
-                return Evaluate(position);
+                return Evaluator.Evaluate(position);
             }
 
             if (depth <= 0)
@@ -171,7 +171,7 @@ namespace NegaPremium {
                     break;
             }
 
-            return bestValue == -Infinity ? Evaluate(position) : bestValue;
+            return bestValue == -Infinity ? Evaluator.Evaluate(position) : bestValue;
         }
 
         private static Boolean IsLegalMove(Position position, Int32 move) {
@@ -371,8 +371,8 @@ namespace NegaPremium {
                 String.Format("Moves processed    {0}", _movesSearched),
                 String.Format("Quiescence nodes   {0:0.00 %}", (Double)_quiescenceNodes / Math.Max(_totalNodes, 1)),
                 String.Format("CNN top-N          {0}", HillClimbingv2TopN),
-                String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluate(position) / 100.0)));
-            Terminal.WriteLine("HillClimbingv2 final evaluation: {0:+0.00;-0.00}", Evaluate(position) / 100.0);
+                String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
+            Terminal.WriteLine("HillClimbingv2 final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
             Terminal.WriteLine();
         }
     }

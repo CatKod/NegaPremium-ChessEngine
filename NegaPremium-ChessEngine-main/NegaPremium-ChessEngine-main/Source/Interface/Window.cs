@@ -151,8 +151,8 @@ namespace NegaPremium {
                 hashSizeMenuItem.Enabled = hasEngine;
                 multiPVMenuItem.Enabled = hasEngine;
                 searchModeMenuItem.Enabled = hasEngine;
-                classicModeMenuItem.Checked = hasEngine && GetEngine().Mode == SearchMode.Classic;
-                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == SearchMode.HillClimbing;
+                classicModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.Classic;
+                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.HillClimbing;
             }
         }
 
@@ -358,7 +358,7 @@ namespace NegaPremium {
         private void ClassicModeClick(Object sender, EventArgs e) {
             Engine engine = GetEngine();
             if (engine != null) {
-                engine.Mode = SearchMode.Classic;
+                engine.Mode = Engine.SearchMode.Classic;
                 UpdateMenu();
             }
         }
@@ -366,7 +366,7 @@ namespace NegaPremium {
         private void HillClimbingModeClick(Object sender, EventArgs e) {
             Engine engine = GetEngine();
             if (engine != null) {
-                engine.Mode = SearchMode.HillClimbing;
+                engine.Mode = Engine.SearchMode.HillClimbing;
                 UpdateMenu();
             }
         }

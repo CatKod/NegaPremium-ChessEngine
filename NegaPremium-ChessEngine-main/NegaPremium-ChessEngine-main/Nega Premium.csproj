@@ -96,9 +96,8 @@
     <Compile Include="Source\Gameplay\Restrictions.cs" />
     <Compile Include="Source\Core\Attack.cs" />
     <Compile Include="Source\Core\Bit.cs" />
-    <Compile Include="Source\Engine\Evaluation.cs" />
-    <Compile Include="Source\Engine\HillClimbing.cs" />
-    <Compile Include="Source\Engine\HillClimbingv2.cs" />
+    <Compile Include="Source\Engine\HillClimbing\HillClimbing.cs" />
+    <Compile Include="Source\Engine\HillClimbingv2\HillClimbingv2.cs" />
     <Compile Include="Source\Engine\Benchmark.cs" />
 	<Compile Include="Source\Engine\Shared\Evaluator.cs" />
     <Compile Include="Source\Interface\Launch.cs" />
@@ -134,9 +133,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Interface\Settings.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\Interface\Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Utilities\Random.cs" />
     <Compile Include="Source\Engine\NegaPremium\Declarations.cs" />
@@ -213,9 +209,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Books\komodo.bin">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Include="Books\komodo.bin" Condition="Exists('Books\komodo.bin')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

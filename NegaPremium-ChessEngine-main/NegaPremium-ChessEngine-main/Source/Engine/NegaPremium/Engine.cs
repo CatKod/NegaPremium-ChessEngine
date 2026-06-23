@@ -10,11 +10,9 @@ namespace NegaPremium {
     public sealed partial class Engine : IPlayer {
 
         /// <summary>
-<<<<<<< HEAD:NegaPremium-ChessEngine-main/NegaPremium-ChessEngine-main/Source/Engine/Engine.cs
         /// Selects which search algorithm to use.
         /// </summary>
         public SearchMode Mode { get; set; } = SearchMode.Classic;
-=======
         /// Engine is AI. 
         /// </summary>
         public Boolean IsAI
@@ -23,7 +21,6 @@ namespace NegaPremium {
                 return true; 
             }
         }
->>>>>>> hoang:NegaPremium-ChessEngine-main/NegaPremium-ChessEngine-main/Source/Engine/NegaPremium/Engine.cs
 
         /// <summary>
         /// The number of nodes visited during the most recent search. 
@@ -113,30 +110,6 @@ namespace NegaPremium {
             Double elapsed = _stopwatch.Elapsed.TotalMilliseconds;
 
             if (Restrictions.Output == OutputType.GUI) {
-<<<<<<< HEAD:NegaPremium-ChessEngine-main/NegaPremium-ChessEngine-main/Source/Engine/Engine.cs
-                if (Mode == SearchMode.HillClimbing) {
-                    WriteHillClimbingStatistics(position, elapsed);
-                } else if (Mode == SearchMode.HillClimbingv2) {
-                    WriteHillClimbingv2Statistics(position, elapsed);
-                } else {
-                    Terminal.WriteLine("-----------------------------------------------------------------------");
-                    Terminal.WriteLine("FEN: " + position.GetFEN());
-                    Terminal.WriteLine();
-                    Terminal.WriteLine(position.ToString(
-                        String.Format("Nega Premium {0} ({1}-bit)", Version, IntPtr.Size * 8),
-                        String.Format("Search time        {0:0} ms", elapsed),
-                        String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(elapsed, 1.0)),
-                        String.Format("Nodes visited      {0}", _totalNodes),
-                        String.Format("Moves processed    {0}", _movesSearched),
-                        String.Format("Quiescence nodes   {0:0.00 %}", (Double)_quiescenceNodes / Math.Max(_totalNodes, 1)),
-                        String.Format("Futility skips     {0:0.00 %}", (Double)_futileMoves / Math.Max(_movesSearched, 1)),
-                        String.Format("Hash cutoffs       {0:0.00 %}", (Double)_hashCutoffs / Math.Max(_hashProbes, 1)),
-                        String.Format("Hash move found    {0:0.00 %}", (Double)_hashMoveMatches / Math.Max(_hashMoveChecks, 1)),
-                        String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
-                        String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluate(position) / 100.0)));
-                    Terminal.WriteLine();
-                }
-=======
                 Terminal.WriteLine("-----------------------------------------------------------------------");
                 Terminal.WriteLine("FEN: " + position.GetFEN());
                 Terminal.WriteLine();
@@ -153,7 +126,6 @@ namespace NegaPremium {
                     String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
                     String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
                 Terminal.WriteLine();
->>>>>>> hoang:NegaPremium-ChessEngine-main/NegaPremium-ChessEngine-main/Source/Engine/NegaPremium/Engine.cs
             }
             return move;
         }
