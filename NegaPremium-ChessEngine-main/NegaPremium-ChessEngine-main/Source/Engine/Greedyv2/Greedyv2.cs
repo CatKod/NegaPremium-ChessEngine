@@ -26,6 +26,10 @@ namespace NegaPremium {
             if (position == null)
                 return Move.Invalid;
 
+            _totalNodes = 0;
+            _movesSearched = 0;
+            _quiescenceNodes = 0;
+
             List<Int32> rootMoves = position.LegalMoves();
             if (rootMoves.Count == 0)
                 return Move.Invalid;
@@ -111,6 +115,8 @@ namespace NegaPremium {
         private Int32 SearchNodev2(Position position, Int32 depth, Int32 ply, Int32 alpha, Int32 beta, Boolean inCheck) {
             if (position == null)
                 return Move.Invalid;
+
+            _totalNodes++;
 
             if (TimeExpired()) {
                 _abortSearch = true;
@@ -364,7 +370,7 @@ namespace NegaPremium {
             Terminal.WriteLine("FEN: " + position.GetFEN());
             Terminal.WriteLine();
             Terminal.WriteLine(position.ToString(
-                String.Format("Greedyv2 {0} ({1}-bit)", Version, IntPtr.Size * 8),
+                String.Format("Greedyv2 {0}       "),
                 String.Format("Search time        {0:0} ms", elapsed),
                 String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(elapsed, 1.0)),
                 String.Format("Nodes visited      {0}", _totalNodes),

@@ -24,6 +24,10 @@ namespace NegaPremium {
             if (position == null)
                 return Move.Invalid;
 
+            _totalNodes = 0;
+            _movesSearched = 0;
+            _quiescenceNodes = 0;
+
             List<Int32> rootMoves = position.LegalMoves();
             if (rootMoves.Count == 0)
                 return Move.Invalid;
@@ -132,6 +136,8 @@ namespace NegaPremium {
             if (position == null)
                 return Move.Invalid;
 
+            _totalNodes++;
+
             if (TimeExpired()) {
                 _abortSearch = true;
                 return Evaluator.Evaluate(position);
@@ -201,6 +207,9 @@ namespace NegaPremium {
             if (position == null)
                 return Move.Invalid;
 
+            _quiescenceNodes++;
+            _totalNodes++;
+
             if (TimeExpired()) {
                 _abortSearch = true;
                 return Evaluator.Evaluate(position);
@@ -234,6 +243,8 @@ namespace NegaPremium {
                 Boolean tactical = inCheck || position.CausesCheck(move) || Move.IsCapture(move) || Move.IsPromotion(move) || Move.IsEnPassant(move);
                 if (!tactical)
                     continue;
+
+                _movesSearched++;
 
                 position.Make(move);
                 Boolean childInCheck = position.InCheck(position.SideToMove);
