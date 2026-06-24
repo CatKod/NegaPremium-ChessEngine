@@ -54,7 +54,18 @@ namespace NegaPremium {
         /// </summary>
         public String Name {
             get {
-                return "Nega Premium " + Version;
+                switch (Mode) {
+                    case SearchMode.Greedy:
+                        return "Greedy";
+                    case SearchMode.Greedyv2:
+                        return "Greedyv2";
+                    case SearchMode.Tactical:
+                        return "Tactical Alpha-Beta";
+                    case SearchMode.Mcts:
+                        return "MCTS";
+                    default:
+                        return "Nega Premium " + Version;
+                }
             }
         }
 

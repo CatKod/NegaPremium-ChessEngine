@@ -337,7 +337,7 @@ namespace NegaPremium {
             Terminal.WriteLine("FEN: " + position.GetFEN());
             Terminal.WriteLine();
             Terminal.WriteLine(position.ToString(
-                String.Format("Greedy {0} ({1}-bit)", Version, IntPtr.Size * 8),
+                String.Format("Greedy {0} ({1}-bit)"),
                 String.Format("Search time        {0:0} ms", elapsed),
                 String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(elapsed, 1.0)),
                 String.Format("Nodes visited      {0}", _totalNodes),
