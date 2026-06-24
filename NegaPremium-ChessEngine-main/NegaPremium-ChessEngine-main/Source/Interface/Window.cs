@@ -152,7 +152,7 @@ namespace NegaPremium {
                 multiPVMenuItem.Enabled = hasEngine;
                 searchModeMenuItem.Enabled = hasEngine;
                 classicModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.Classic;
-                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.HillClimbing;
+                GreedyModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.Greedy;
             }
         }
 
@@ -363,10 +363,10 @@ namespace NegaPremium {
             }
         }
 
-        private void HillClimbingModeClick(Object sender, EventArgs e) {
+        private void GreedyModeClick(Object sender, EventArgs e) {
             Engine engine = GetEngine();
             if (engine != null) {
-                engine.Mode = Engine.SearchMode.HillClimbing;
+                engine.Mode = Engine.SearchMode.Greedy;
                 UpdateMenu();
             }
         }

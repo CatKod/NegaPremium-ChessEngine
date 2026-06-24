@@ -43,7 +43,7 @@ namespace NegaPremium {
             this.multiPVMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.classicModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hillClimbingModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.GreedyModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateBoardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,7 +207,7 @@ namespace NegaPremium {
             // 
             this.searchModeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.classicModeMenuItem,
-            this.hillClimbingModeMenuItem});
+            this.GreedyModeMenuItem});
             this.searchModeMenuItem.Name = "searchModeMenuItem";
             this.searchModeMenuItem.Size = new System.Drawing.Size(162, 26);
             this.searchModeMenuItem.Text = "Search Mode";
@@ -219,12 +219,12 @@ namespace NegaPremium {
             this.classicModeMenuItem.Text = "Classic";
             this.classicModeMenuItem.Click += new System.EventHandler(this.ClassicModeClick);
             // 
-            // hillClimbingModeMenuItem
+            // GreedyModeMenuItem
             // 
-            this.hillClimbingModeMenuItem.Name = "hillClimbingModeMenuItem";
-            this.hillClimbingModeMenuItem.Size = new System.Drawing.Size(180, 26);
-            this.hillClimbingModeMenuItem.Text = "Hill Climbing";
-            this.hillClimbingModeMenuItem.Click += new System.EventHandler(this.HillClimbingModeClick);
+            this.GreedyModeMenuItem.Name = "GreedyModeMenuItem";
+            this.GreedyModeMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.GreedyModeMenuItem.Text = "Hill Climbing";
+            this.GreedyModeMenuItem.Click += new System.EventHandler(this.GreedyModeClick);
             // 
             // displayMenu
             // 
@@ -308,6 +308,6 @@ namespace NegaPremium {
         private System.Windows.Forms.ToolStripMenuItem multiPVMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchModeMenuItem;
         private System.Windows.Forms.ToolStripMenuItem classicModeMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hillClimbingModeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem GreedyModeMenuItem;
     }
 }

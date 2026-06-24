@@ -8,19 +8,19 @@ namespace NegaPremium {
     /// </summary>
     public sealed partial class Engine : IPlayer {
 
-        private const Double HillClimbingTargetTimeLimit = 3.0;
-        private const Double HillClimbingStopMargin = 0.20;
-        private const Int32 HillClimbingQuiescenceLimit = 8;
-        private const Int32 HillClimbingMateScore = CheckmateValue;
-        private const Int32 HillClimbingMateDistanceOffset = 1;
-        private const Int32 HillClimbingLateMoveReductionDepth = 3;
-        private const Int32 HillClimbingLateMoveReductionMove = 3;
-        private const Int32 HillClimbingNullMoveReduction = 2;
+        private const Double GreedyTargetTimeLimit = 3.0;
+        private const Double GreedyStopMargin = 0.20;
+        private const Int32 GreedyQuiescenceLimit = 8;
+        private const Int32 GreedyMateScore = CheckmateValue;
+        private const Int32 GreedyMateDistanceOffset = 1;
+        private const Int32 GreedyLateMoveReductionDepth = 3;
+        private const Int32 GreedyLateMoveReductionMove = 3;
+        private const Int32 GreedyNullMoveReduction = 2;
 
         /// <summary>
         /// Returns a move selected by iterative deepening hill climbing.
         /// </summary>
-        private Int32 HillClimbingSearch(Position position, Int32 depth, Int32 alpha, Int32 beta, Int32 ply, Boolean inCheck, Boolean allowNull) {
+        private Int32 GreedySearch(Position position, Int32 depth, Int32 alpha, Int32 beta, Int32 ply, Boolean inCheck, Boolean allowNull) {
             if (position == null)
                 return Move.Invalid;
 
@@ -94,8 +94,8 @@ namespace NegaPremium {
                     bestMove = iterationBestMove;
                     bestValue = iterationBestValue;
                     PromoteRootMove(rootMoves, iterationBestMove);
-                    principalVariation = GetHillClimbingPrincipalVariation(position, iterationBestMove, currentDepth);
-                    WriteHillClimbingLog(position, currentDepth, bestValue, principalVariation);
+                    principalVariation = GetGreedyPrincipalVariation(position, iterationBestMove, currentDepth);
+                    WriteGreedyLog(position, currentDepth, bestValue, principalVariation);
                 }
             }
 
@@ -107,7 +107,7 @@ namespace NegaPremium {
                 Terminal.WriteLine("FEN: " + position.GetFEN());
                 Terminal.WriteLine();
                 Terminal.WriteLine(position.ToString(
-                    String.Format("HillClimbing {0} ({1}-bit)", Version, IntPtr.Size * 8),
+                    String.Format("Greedy {0} ({1}-bit)", Version, IntPtr.Size * 8),
                     String.Format("Search time        {0:0} ms", _stopwatch.Elapsed.TotalMilliseconds),
                     String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(_stopwatch.Elapsed.TotalMilliseconds, 1.0)),
                     String.Format("Nodes visited      {0}", _totalNodes),
@@ -118,7 +118,7 @@ namespace NegaPremium {
                     String.Format("Hash move found    {0:0.00 %}", (Double)_hashMoveMatches / Math.Max(_hashMoveChecks, 1)),
                     String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
                     String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
-                Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
+                Terminal.WriteLine("Greedy final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
                 Terminal.WriteLine();
             }
 
@@ -148,7 +148,7 @@ namespace NegaPremium {
 
             if (CanApplyNullMove(position, inCheck, depth)) {
                 position.MakeNull();
-                Int32 nullValue = -SearchNode(position, depth - 1 - HillClimbingNullMoveReduction, ply + 1, -beta, -beta + 1, false);
+                Int32 nullValue = -SearchNode(position, depth - 1 - GreedyNullMoveReduction, ply + 1, -beta, -beta + 1, false);
                 position.UnmakeNull();
                 if (nullValue >= beta)
                     return nullValue;
@@ -163,7 +163,7 @@ namespace NegaPremium {
 
                 Int32 move = moves[i];
                 Boolean tactical = inCheck || position.CausesCheck(move) || Move.IsCapture(move) || Move.IsPromotion(move) || Move.IsEnPassant(move);
-                Boolean reducible = i >= HillClimbingLateMoveReductionMove && depth >= HillClimbingLateMoveReductionDepth && !tactical;
+                Boolean reducible = i >= GreedyLateMoveReductionMove && depth >= GreedyLateMoveReductionDepth && !tactical;
 
                 position.Make(move);
                 Boolean childInCheck = position.InCheck(position.SideToMove);
@@ -206,7 +206,7 @@ namespace NegaPremium {
                 return Evaluator.Evaluate(position);
             }
 
-            if (ply >= HillClimbingQuiescenceLimit)
+            if (ply >= GreedyQuiescenceLimit)
                 return Evaluator.Evaluate(position);
 
             Int32 standPat = Evaluator.Evaluate(position);
@@ -252,7 +252,7 @@ namespace NegaPremium {
         }
 
         private Boolean TimeExpired() {
-            return _stopwatch.IsRunning && _stopwatch.Elapsed.TotalSeconds >= HillClimbingTargetTimeLimit - HillClimbingStopMargin;
+            return _stopwatch.IsRunning && _stopwatch.Elapsed.TotalSeconds >= GreedyTargetTimeLimit - GreedyStopMargin;
         }
 
         private static void OrderMoves(Position position, List<Int32> moves, Int32 ply) {
@@ -282,7 +282,7 @@ namespace NegaPremium {
             return position.Bitboard[colour] != (position.Bitboard[colour | Piece.King] | position.Bitboard[colour | Piece.Pawn]);
         }
 
-        private static String GetHillClimbingPrincipalVariation(Position position, Int32 bestMove, Int32 depth) {
+        private static String GetGreedyPrincipalVariation(Position position, Int32 bestMove, Int32 depth) {
             if (position == null || bestMove == Move.Invalid || depth <= 0)
                 return String.Empty;
 
@@ -304,21 +304,21 @@ namespace NegaPremium {
             return Stringify.MovesAlgebraically(position.DeepClone(), moves, StringifyOptions.Proper);
         }
 
-        private static void WriteHillClimbingLog(Position position, Int32 depth, Int32 value, String principalVariation) {
+        private static void WriteGreedyLog(Position position, Int32 depth, Int32 value, String principalVariation) {
             if (Restrictions.Output != OutputType.GUI)
                 return;
 
             String valueText = Math.Abs(value) >= CheckmateValue - 1000
-                ? (value > 0 ? "+Mate " : "-Mate ") + Math.Max(1, (CheckmateValue - Math.Abs(value) + HillClimbingMateDistanceOffset) / 2)
+                ? (value > 0 ? "+Mate " : "-Mate ") + Math.Max(1, (CheckmateValue - Math.Abs(value) + GreedyMateDistanceOffset) / 2)
                 : String.Format("{0:+0.00;-0.00}", value / 100.0);
 
             Terminal.WriteLine("{0,-7}{1,-9}{2}", depth, valueText, principalVariation);
         }
 
         /// <summary>
-        /// Writes the final HillClimbing search statistics.
+        /// Writes the final Greedy search statistics.
         /// </summary>
-        private void WriteHillClimbingStatistics(Position position, Double elapsed) {
+        private void WriteGreedyStatistics(Position position, Double elapsed) {
             if (Restrictions.Output != OutputType.GUI)
                 return;
 
@@ -326,17 +326,17 @@ namespace NegaPremium {
             Terminal.WriteLine("FEN: " + position.GetFEN());
             Terminal.WriteLine();
             Terminal.WriteLine(position.ToString(
-                String.Format("HillClimbing {0} ({1}-bit)", Version, IntPtr.Size * 8),
+                String.Format("Greedy {0} ({1}-bit)", Version, IntPtr.Size * 8),
                 String.Format("Search time        {0:0} ms", elapsed),
                 String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(elapsed, 1.0)),
                 String.Format("Nodes visited      {0}", _totalNodes),
                 String.Format("Moves processed    {0}", _movesSearched),
                 String.Format("Quiescence nodes   {0:0.00 %}", (Double)_quiescenceNodes / Math.Max(_totalNodes, 1)),
-                String.Format("Quiescence limit   {0}", HillClimbingQuiescenceLimit),
-                String.Format("Stop margin        {0:0.00} s", HillClimbingStopMargin),
-                String.Format("Target time        {0:0.00} s", HillClimbingTargetTimeLimit),
+                String.Format("Quiescence limit   {0}", GreedyQuiescenceLimit),
+                String.Format("Stop margin        {0:0.00} s", GreedyStopMargin),
+                String.Format("Target time        {0:0.00} s", GreedyTargetTimeLimit),
                 String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
-            Terminal.WriteLine("HillClimbing final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
+            Terminal.WriteLine("Greedy final evaluation: {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0);
             Terminal.WriteLine();
         }
 

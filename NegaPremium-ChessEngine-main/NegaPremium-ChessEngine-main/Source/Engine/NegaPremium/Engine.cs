@@ -98,10 +98,10 @@ namespace NegaPremium {
             _stopwatch.Start();
 
             // Perform the search. 
-            Int32 move = Mode == SearchMode.HillClimbing
-                ? HillClimbingSearch(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
-                : Mode == SearchMode.HillClimbingv2
-                    ? HillClimbingv2Search(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
+            Int32 move = Mode == SearchMode.Greedy
+                ? GreedySearch(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
+                : Mode == SearchMode.Greedyv2
+                    ? Greedyv2Search(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
                     : Search(position);
             _abortSearch = true;
 

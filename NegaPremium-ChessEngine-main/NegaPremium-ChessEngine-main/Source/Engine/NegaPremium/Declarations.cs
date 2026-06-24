@@ -18,8 +18,8 @@ namespace NegaPremium
             Classic,
             Tactical,
             Mcts,
-            HillClimbing,
-            HillClimbingv2
+            Greedy,
+            Greedyv2
         }
 
         // ========================================================

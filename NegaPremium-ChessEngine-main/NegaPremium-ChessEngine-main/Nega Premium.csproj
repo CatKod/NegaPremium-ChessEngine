@@ -95,8 +95,8 @@
 		<Compile Include="Source\Gameplay\Restrictions.cs" />
 		<Compile Include="Source\Core\Attack.cs" />
 		<Compile Include="Source\Core\Bit.cs" />
-		<Compile Include="Source\Engine\HillClimbing\HillClimbing.cs" />
-		<Compile Include="Source\Engine\HillClimbingv2\HillClimbingv2.cs" />
+		<Compile Include="Source\Engine\Greedy\Greedy.cs" />
+		<Compile Include="Source\Engine\Greedyv2\Greedyv2.cs" />
 		<Compile Include="Source\Engine\Benchmark.cs" />
 		<Compile Include="Source\Engine\Shared\Evaluator.cs" />
 		<Compile Include="Source\Interface\Launch.cs" />
@@ -201,7 +201,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.16.3" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.22.1" />
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
