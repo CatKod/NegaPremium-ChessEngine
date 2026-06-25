@@ -140,24 +140,16 @@ namespace NegaPremium
             // ========================================================
             // 3. TỔNG KẾT
             // ========================================================
-            MCTSNode bestChild = GetBestChild(root);
+            StatisticsLogger.LogGUI(
+                position,
+                Name,
+                _stopwatch.Elapsed.TotalMilliseconds,
+                root.Visits,
+                movesProcessed: 0
+            );
 
-            if (Restrictions.Output == OutputType.GUI)
-            {
-                Terminal.WriteLine();
-                Terminal.WriteLine("-----------------------------------------------------------------------");
-                Terminal.WriteLine($"Search time        {_stopwatch.ElapsedMilliseconds} ms");
-                Terminal.WriteLine($"Nodes evaluated    {root.Visits}");
-                Terminal.WriteLine($"Search speed       {(root.Visits / (_stopwatch.ElapsedMilliseconds / 1000.0)):0} N/s");
-                if (bestChild != null)
-                {
-                    Terminal.WriteLine($"Best move visits   {bestChild.Visits}");
-                    Terminal.WriteLine($"Expected Win Rate  {(bestChild.TotalScore / bestChild.Visits * 100):0.00} %");
-                }
-                Terminal.WriteLine();
-            }
-
-            return bestChild != null ? bestChild.Move : position.LegalMoves()[0];
+            MCTSNode bestNode = GetBestChild(root);
+            return bestNode != null ? bestNode.Move : position.LegalMoves()[0];
         }
 
         // ========================================================

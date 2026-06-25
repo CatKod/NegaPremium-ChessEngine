@@ -36,29 +36,22 @@ namespace NegaPremium
 
         private void BuildRuntimeLayout()
         {
+            // Thiết lập tiêu đề và kích thước cố định cho cửa sổ
+            this.Text = "Nega Premium";
             this.ClientSize = new Size(380, 145);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             Controls.Clear();
 
-            Panel whitePanel = new Panel
+            // Thay thế Panel bằng GroupBox cho phe Trắng
+            GroupBox whiteGroup = new GroupBox
             {
+                Text = "White",
                 Size = new Size(165, 75),
                 Location = new Point(15, 10)
             };
-
-            Panel blackPanel = new Panel
-            {
-                Size = new Size(165, 75),
-                Location = new Point(195, 10)
-            };
-
-            Button start = new Button
-            {
-                Size = new Size(345, 35),
-                Location = new Point(15, 95),
-                Text = "Start"
-            };
-            start.Click += StartClick;
 
             cboWhite = new ComboBox
             {
@@ -68,7 +61,15 @@ namespace NegaPremium
             };
             cboWhite.Items.AddRange(PlayerFactory.GetAvailableModes());
             cboWhite.SelectedIndex = 0;
-            whitePanel.Controls.Add(cboWhite);
+            whiteGroup.Controls.Add(cboWhite);
+
+            // Thay thế Panel bằng GroupBox cho phe Đen
+            GroupBox blackGroup = new GroupBox
+            {
+                Text = "Black",
+                Size = new Size(165, 75),
+                Location = new Point(200, 10)
+            };
 
             cboBlack = new ComboBox
             {
@@ -78,10 +79,20 @@ namespace NegaPremium
             };
             cboBlack.Items.AddRange(PlayerFactory.GetAvailableModes());
             cboBlack.SelectedIndex = 0;
-            blackPanel.Controls.Add(cboBlack);
+            blackGroup.Controls.Add(cboBlack);
 
-            Controls.Add(whitePanel);
-            Controls.Add(blackPanel);
+            // Nút Start
+            Button start = new Button
+            {
+                Text = "Start",
+                Location = new Point(15, 95),
+                Size = new Size(350, 35)
+            };
+            start.Click += StartClick;
+
+            // Thêm các Control vào form
+            Controls.Add(whiteGroup);
+            Controls.Add(blackGroup);
             Controls.Add(start);
         }
 

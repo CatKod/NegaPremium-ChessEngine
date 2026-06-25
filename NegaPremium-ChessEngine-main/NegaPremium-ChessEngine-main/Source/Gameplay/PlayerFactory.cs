@@ -20,10 +20,10 @@ namespace NegaPremium
                     return new TacticalBot();
                 case "Heuristic MCTS":
                     return new HeuristicMCTSBot();
-                case "HillClimbing":
-                    return new Engine { Mode = Engine.SearchMode.HillClimbing };
-                case "HillClimbingv2":
-                    return new Engine { Mode = Engine.SearchMode.HillClimbingv2 };
+                case "Greedy":
+                    return new Engine { Mode = Engine.SearchMode.Greedy };
+                case "Greedyv2":
+                    return new Engine { Mode = Engine.SearchMode.Greedyv2 };
                 default:
                     return new Human();
             }
@@ -32,7 +32,7 @@ namespace NegaPremium
         // This list will automatically be populated into the UI (ComboBox)
         public static string[] GetAvailableModes()
         {
-            return new string[] { "Human", "Nega Premium", "Tactical Bot", "Heuristic MCTS", "HillClimbing", "HillClimbingv2" };
+            return new string[] { "Human", "Nega Premium", "Tactical Bot", "Heuristic MCTS", "Greedy", "Greedyv2" };
         }
     }
 }

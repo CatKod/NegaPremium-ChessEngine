@@ -96,10 +96,11 @@
     <Compile Include="Source\Gameplay\Restrictions.cs" />
     <Compile Include="Source\Core\Attack.cs" />
     <Compile Include="Source\Core\Bit.cs" />
-    <Compile Include="Source\Engine\HillClimbing\HillClimbing.cs" />
-    <Compile Include="Source\Engine\HillClimbingv2\HillClimbingv2.cs" />
+    <Compile Include="Source\Engine\Greedy\Greedy.cs" />
+    <Compile Include="Source\Engine\Greedyv2\Greedyv2.cs" />
     <Compile Include="Source\Engine\Benchmark.cs" />
 	<Compile Include="Source\Engine\Shared\Evaluator.cs" />
+	<Compile Include="Source\Engine\Shared\StatisticsLogger.cs" />
     <Compile Include="Source\Interface\Launch.cs" />
     <Compile Include="Source\Utilities\Stringify.cs" />
     <Compile Include="Source\Utilities\Native.cs" />

@@ -98,35 +98,45 @@ namespace NegaPremium {
             _stopwatch.Start();
 
             // Perform the search. 
-            Int32 move = Mode == SearchMode.HillClimbing
-                ? HillClimbingSearch(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
-                : Mode == SearchMode.HillClimbingv2
-                    ? HillClimbingv2Search(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true)
-                    : Search(position);
-            _abortSearch = true;
+            Int32 move = Move.Invalid;
+            String botName = "Nega Premium " + Version;
 
-            // Output search statistics. 
-            _stopwatch.Stop();
-            Double elapsed = _stopwatch.Elapsed.TotalMilliseconds;
-
-            if (Restrictions.Output == OutputType.GUI) {
-                Terminal.WriteLine("-----------------------------------------------------------------------");
-                Terminal.WriteLine("FEN: " + position.GetFEN());
-                Terminal.WriteLine();
-                Terminal.WriteLine(position.ToString(
-                    String.Format("Nega Premium {0} ({1}-bit)", Version, IntPtr.Size * 8),
-                    String.Format("Search time        {0:0} ms", elapsed),
-                    String.Format("Search speed       {0:0} kN/s", _totalNodes / Math.Max(elapsed, 1.0)),
-                    String.Format("Nodes visited      {0}", _totalNodes),
-                    String.Format("Moves processed    {0}", _movesSearched),
-                    String.Format("Quiescence nodes   {0:0.00 %}", (Double)_quiescenceNodes / Math.Max(_totalNodes, 1)),
-                    String.Format("Futility skips     {0:0.00 %}", (Double)_futileMoves / Math.Max(_movesSearched, 1)),
-                    String.Format("Hash cutoffs       {0:0.00 %}", (Double)_hashCutoffs / Math.Max(_hashProbes, 1)),
-                    String.Format("Hash move found    {0:0.00 %}", (Double)_hashMoveMatches / Math.Max(_hashMoveChecks, 1)),
-                    String.Format("Killer move found  {0:0.00 %}", (Double)_killerMoveMatches / Math.Max(_killerMoveChecks, 1)),
-                    String.Format("Static evaluation  {0:+0.00;-0.00}", Evaluator.Evaluate(position) / 100.0)));
-                Terminal.WriteLine();
+            if (Mode == SearchMode.Greedy)
+            {
+                move = GreedySearch(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true);
+                botName = "Greedy " + Version;
             }
+            else if (Mode == SearchMode.Greedyv2)
+            {
+                move = Greedyv2Search(position, Restrictions.Depth, -Infinity, Infinity, 0, position.InCheck(position.SideToMove), true);
+                botName = "Greedyv2 " + Version;
+            }
+            else
+            {
+                move = Search(position);
+            }
+
+            _stopwatch.Stop();
+
+            if (Restrictions.Output == OutputType.GUI)
+            {
+                StatisticsLogger.LogGUI(
+                    position,
+                    botName,
+                    _stopwatch.Elapsed.TotalMilliseconds,
+                    _totalNodes,
+                    _movesSearched,
+                    _quiescenceNodes,
+                    _futileMoves,
+                    _hashProbes,
+                    _hashCutoffs,
+                    _hashMoveChecks,
+                    _hashMoveMatches,
+                    _killerMoveChecks,
+                    _killerMoveMatches
+                );
+            }
+
             return move;
         }
 

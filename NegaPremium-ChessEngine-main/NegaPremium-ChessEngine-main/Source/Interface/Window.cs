@@ -152,7 +152,7 @@ namespace NegaPremium {
                 multiPVMenuItem.Enabled = hasEngine;
                 searchModeMenuItem.Enabled = hasEngine;
                 classicModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.Classic;
-                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.HillClimbing;
+                hillClimbingModeMenuItem.Checked = hasEngine && GetEngine().Mode == Engine.SearchMode.Greedy;
             }
         }
 
@@ -366,7 +366,7 @@ namespace NegaPremium {
         private void HillClimbingModeClick(Object sender, EventArgs e) {
             Engine engine = GetEngine();
             if (engine != null) {
-                engine.Mode = Engine.SearchMode.HillClimbing;
+                engine.Mode = Engine.SearchMode.Greedy;
                 UpdateMenu();
             }
         }
@@ -374,28 +374,6 @@ namespace NegaPremium {
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
             Invalidate();
-        }
-
-        protected override void OnPaint(PaintEventArgs e) {
-            base.OnPaint(e);
-
-            Graphics g = e.Graphics;
-
-            // Vẽ bàn cờ.
-            for (int rank = 0; rank < 8; rank++) {
-                for (int file = 0; file < 8; file++) {
-                    Color squareColor = (file + rank) % 2 == 0
-                        ? VisualPosition.LightSquareColor // Sử dụng LightSquareColor.
-                        : VisualPosition.DarkSquareColor; // Sử dụng DarkSquareColor.
-
-                    using (Brush brush = new SolidBrush(squareColor)) {
-                        g.FillRectangle(brush, file * VisualPosition.SquareWidth, rank * VisualPosition.SquareWidth, VisualPosition.SquareWidth, VisualPosition.SquareWidth);
-                    }
-                }
-            }
-
-            // Vẽ các quân cờ.
-            VisualPosition.DrawPieces(g);
         }
 
         private void Window_Load(object sender, EventArgs e)

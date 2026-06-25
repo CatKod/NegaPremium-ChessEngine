@@ -32,6 +32,8 @@ namespace NegaPremium
         private Int32 _currentPly;
         private Stopwatch _stopwatch;
         private Int32 _bestScore;
+        private Int64 _movesSearched;
+        private Int64 _quiescenceNodes;
 
         // Evaluation Noise
         private static readonly System.Random _rand = new System.Random();
@@ -62,6 +64,8 @@ namespace NegaPremium
             _pvLength[0] = 0;
             _timeLimit = Restrictions.MoveTime;
             _stopwatch = Stopwatch.StartNew();
+            _movesSearched = 0;
+            _quiescenceNodes = 0;
 
             // --- TRA CỨU SÁCH KHAI CUỘC (OPENING BOOK LOOKUP) ---
             string fileName = "komodo.bin";
@@ -114,14 +118,17 @@ namespace NegaPremium
 
                         if (moveCoord == bookMoveString || Stringify.Move(m) == bookMoveString)
                         {
-                            // In lịch sử sách ra Terminal / Log the book hit to Terminal
-                            if (Restrictions.Output == OutputType.GUI)
-                            {
-                                Terminal.WriteLine($"[BOOK HIT] TacticalBot play with book: {bookMoveString}");
-                                Terminal.WriteLine("-----------------------------------------------------------------------");
-                            }
-
                             _stopwatch.Stop();
+
+                            StatisticsLogger.LogGUI(
+                                position,
+                                Name,
+                                _stopwatch.Elapsed.TotalMilliseconds,
+                                _nodes,
+                                _movesSearched,
+                                _quiescenceNodes
+                            );
+
                             return m;
                         }
                     }
@@ -167,13 +174,14 @@ namespace NegaPremium
 
             _stopwatch.Stop();
 
-            if (Restrictions.Output == OutputType.GUI)
-            {
-                Terminal.WriteLine("-----------------------------------------------------------------------");
-                Terminal.WriteLine($"Nodes visited      {_nodes}");
-                Terminal.WriteLine($"Search time        {_stopwatch.ElapsedMilliseconds} ms");
-                Terminal.WriteLine();
-            }
+            StatisticsLogger.LogGUI(
+                position,
+                Name,
+                _stopwatch.Elapsed.TotalMilliseconds,
+                _nodes,
+                _movesSearched,
+                _quiescenceNodes
+            );
 
             return bestMove;
         }
@@ -226,6 +234,7 @@ namespace NegaPremium
         {
             _nodes++;
             _pvLength[_currentPly] = 0;
+            _movesSearched++;
 
             if (_nodes % 1000 == 0 && _stopwatch.ElapsedMilliseconds > _timeLimit)
             {
@@ -279,6 +288,7 @@ namespace NegaPremium
         {
             _nodes++;
             _pvLength[_currentPly] = 0;
+            _quiescenceNodes++;
 
             if (_nodes % 1000 == 0 && _stopwatch.ElapsedMilliseconds > _timeLimit)
             {
