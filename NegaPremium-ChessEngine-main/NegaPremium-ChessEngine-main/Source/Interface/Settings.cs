@@ -20,16 +20,38 @@ namespace NegaPremium
         /// </summary>
         public Settings()
         {
-            Icon = LoadIconSafely();
             BuildRuntimeLayout();
+            this.Icon = LoadIconSafely();
         }
 
-        private static Icon LoadIconSafely() {
-            try {
-                using (Stream stream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico"))) {
-                    return new Icon(stream);
+        private static Icon LoadIconSafely()
+        {
+            try
+            {
+                // Thử tìm ở thư mục chạy thực tế
+                string primaryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico");
+                if (File.Exists(primaryPath))
+                {
+                    using (Stream stream = File.OpenRead(primaryPath))
+                    {
+                        return new Icon(stream);
+                    }
                 }
-            } catch {
+
+                // Hướng dự phòng 2: Nếu chạy debug trong bin/Debug/ hoặc bin/Release/
+                string fallbackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Resources", "icon.ico");
+                if (File.Exists(fallbackPath))
+                {
+                    using (Stream stream = File.OpenRead(fallbackPath))
+                    {
+                        return new Icon(stream);
+                    }
+                }
+
+                return SystemIcons.Application;
+            }
+            catch
+            {
                 return SystemIcons.Application;
             }
         }
@@ -103,7 +125,8 @@ namespace NegaPremium
             // Protect Designer: Only construct the UI during actual runtime.
             if (DesignMode) return;
 
-            BuildRuntimeLayout();
+            // Chỉ nạp lại Icon một lần nữa để chắc chắn hệ thống render chính xác
+            this.Icon = LoadIconSafely();
         }
 
         /// <summary>

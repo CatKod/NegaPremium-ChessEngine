@@ -28,9 +28,7 @@ namespace NegaPremium {
                     String depthString = depth.ToString();
                     String valueString = isMate ? (value > 0 ? "+Mate " : "-Mate ") + movesToMate :
                                                   (value / 100.0).ToString("+0.00;-0.00");
-                    String movesString = Stringify.MovesAlgebraically(position, pv);
-
-                    return String.Format(PVFormat, depthString, valueString, movesString);
+                    return String.Format(PVFormat, depthString, valueString, FormatPrincipalVariation(position, pv));
 
                 // Return UCI output. 
                 case OutputType.UCI:
@@ -65,6 +63,50 @@ namespace NegaPremium {
             for (Int32 i = 0; i < _pvLength[0]; i++)
                 variation.Add(_pvMoves[0][i]);
             return variation;
+        }
+
+        private static String FormatPrincipalVariation(Position position, List<Int32> moves)
+        {
+            if (position == null || moves == null || moves.Count == 0) return String.Empty;
+
+            string rawPv = Stringify.MovesAlgebraically(position, moves);
+
+            string[] rawTokens = rawPv.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> sanMoves = new List<string>();
+            foreach (string token in rawTokens)
+            {
+                if (!token.Contains("."))
+                {
+                    sanMoves.Add(token);
+                }
+            }
+
+            System.Text.StringBuilder pv = new System.Text.StringBuilder();
+            string[] fenParts = position.GetFEN().Split(' ');
+            int currentMoveNumber = 1;
+            bool isBlackToMove = false;
+
+            if (fenParts.Length >= 2 && fenParts[1] == "b") isBlackToMove = true;
+            if (fenParts.Length >= 6) int.TryParse(fenParts[5], out currentMoveNumber);
+
+            for (int i = 0; i < sanMoves.Count; i++)
+            {
+                if (i > 0) pv.Append(" ");
+
+                if (isBlackToMove)
+                {
+                    if (i == 0) pv.Append(currentMoveNumber).Append("... ");
+                    pv.Append(sanMoves[i]);
+                    isBlackToMove = false;
+                    currentMoveNumber++;
+                }
+                else
+                {
+                    pv.Append(currentMoveNumber).Append(". ").Append(sanMoves[i]);
+                    isBlackToMove = true;
+                }
+            }
+            return pv.ToString().Trim();
         }
     }
 }

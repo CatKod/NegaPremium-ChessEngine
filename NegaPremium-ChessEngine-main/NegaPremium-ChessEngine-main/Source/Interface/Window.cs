@@ -33,15 +33,16 @@ namespace NegaPremium {
         /// <summary>
         /// Constructs a Window for the specified Game.
         /// </summary>
-        /// <param name="game">The game to associate with the window.</param>
-        public Window() {
+        public Window()
+        {
             InitializeComponent();
 
+            // Loại bỏ hoàn toàn khối AssignHandle gây crash lỗi tồn tại Handle
             Icon = LoadIconSafely();
 
-            // bật double buffering
-            SetStyle(ControlStyles.AllPaintingInWmPaint 
-                   | ControlStyles.UserPaint 
+            // Bật double buffering để giảm giật hình
+            SetStyle(ControlStyles.AllPaintingInWmPaint
+                   | ControlStyles.UserPaint
                    | ControlStyles.OptimizedDoubleBuffer, true);
             DoubleBuffered = true;
 
@@ -61,15 +62,70 @@ namespace NegaPremium {
             // don't need to draw the light squares. 
             BackColor = VisualPosition.LightSquareColor;
 
-            // Start draw thread. 
+            // Thread ngầm gọi lệnh Invalidate một cách an toàn luồng (Thread-safe)
             new Thread(new ThreadStart(() => {
-                while (true) {
-                    Invalidate();
+                while (true)
+                {
+                    if (this.IsHandleCreated && !this.IsDisposed)
+                    {
+                        try
+                        {
+                            this.BeginInvoke(new Action(() => {
+                                if (!this.IsDisposed) this.Invalidate(false); // Chỉ làm mới vùng bàn cờ, không ép thanh tiêu đề vẽ lại
+                            }));
+                        }
+                        catch
+                        {
+                            // Bỏ qua nếu form đang đóng
+                        }
+                    }
                     Thread.Sleep(DrawInterval);
                 }
-            })) {
+            }))
+            {
                 IsBackground = true
             }.Start();
+        }
+
+        // Override sự kiện này để ép hệ điều hành Windows nạp Icon một cách chính thống sau khi tạo xong khung
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            // Nạp lại icon để đảm bảo WinForms không bị reset đồ họa thanh tiêu đề khi chạy luồng ngầm
+            Icon = LoadIconSafely();
+        }
+
+        private static Icon LoadIconSafely()
+        {
+            try
+            {
+                // Hướng 1: Tìm tại thư mục gốc thực thi chuẩn
+                string primaryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico");
+                if (File.Exists(primaryPath))
+                {
+                    using (Stream stream = File.OpenRead(primaryPath))
+                    {
+                        return new Icon(stream);
+                    }
+                }
+
+                // Hướng dự phòng 2: Dành cho môi trường Debug khi file build nằm trong bin/Debug/
+                string fallbackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Resources", "icon.ico");
+                if (File.Exists(fallbackPath))
+                {
+                    using (Stream stream = File.OpenRead(fallbackPath))
+                    {
+                        return new Icon(stream);
+                    }
+                }
+
+                return SystemIcons.Application;
+            }
+            catch
+            {
+                return SystemIcons.Application;
+            }
         }
 
         /// <summary>
@@ -100,19 +156,6 @@ namespace NegaPremium {
             else {
                 VisualPosition.DrawDarkSquares(g);
                 VisualPosition.DrawPieces(g);
-            }
-        }
-
-        /// <summary>
-        /// Updates which menu components are enabled or checked. 
-        /// </summary>
-        private static Icon LoadIconSafely() {
-            try {
-                using (Stream stream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "icon.ico"))) {
-                    return new Icon(stream);
-                }
-            } catch {
-                return SystemIcons.Application;
             }
         }
 

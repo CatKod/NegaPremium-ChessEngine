@@ -50,10 +50,15 @@ namespace NegaPremium {
         public Boolean IsExperimental { get; set; }
 
         /// <summary>
-        /// The name of the engine. 
+        /// The name of the engine based on its current search mode.
         /// </summary>
-        public String Name {
-            get {
+        public String Name
+        {
+            get
+            {
+                if (Mode == SearchMode.Greedy) return "Greedy " + Version;
+                if (Mode == SearchMode.Greedyv2) return "Greedyv2 " + Version;
+
                 return "Nega Premium " + Version;
             }
         }

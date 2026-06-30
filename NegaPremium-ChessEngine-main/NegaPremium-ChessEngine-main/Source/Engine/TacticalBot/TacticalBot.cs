@@ -163,7 +163,7 @@ namespace NegaPremium
                     String valueString = isMate ? (_bestScore > 0 ? "+Mate " : "-Mate ") + movesToMate :
                                                   (_bestScore / 100.0).ToString("+0.00;-0.00");
 
-                    String movesString = Stringify.MovesAlgebraically(position, pv);
+                    String movesString = FormatPrincipalVariation(position, pv);
 
                     Terminal.WriteLine("{0,-8}{1,-9}{2}", depth.ToString(), valueString, movesString);
                 }
@@ -178,9 +178,9 @@ namespace NegaPremium
                 position,
                 Name,
                 _stopwatch.Elapsed.TotalMilliseconds,
-                _nodes,
-                _movesSearched,
-                _quiescenceNodes
+                (long)_nodes,
+                (long)_movesSearched,
+                (long)_quiescenceNodes
             );
 
             return bestMove;
@@ -396,5 +396,52 @@ namespace NegaPremium
         }
 
         public void Draw(System.Drawing.Graphics g) { }
+
+        private static String FormatPrincipalVariation(Position position, List<Int32> moves)
+        {
+            if (position == null || moves == null || moves.Count == 0) return String.Empty;
+
+            System.Text.StringBuilder pv = new System.Text.StringBuilder();
+
+            // 1. Phân tích FEN thực tế để lấy lượt đi chính xác của hệ thống toàn cục
+            string[] fenParts = position.GetFEN().Split(' ');
+            int currentMoveNumber = 1;
+            bool isBlackToMove = false;
+
+            if (fenParts.Length >= 2 && fenParts[1] == "b") isBlackToMove = true;
+            if (fenParts.Length >= 6) int.TryParse(fenParts[5], out currentMoveNumber);
+
+            // 2. Sử dụng bản clone mô phỏng để sinh từng nước đi SAN sạch sẽ, không dính số thứ tự cũ
+            Position probe = position.DeepClone();
+            for (int i = 0; i < moves.Count; i++)
+            {
+                if (i > 0) pv.Append(" ");
+
+                // Sinh ra nước đi đại số đơn lẻ
+                string algebraicMove = Stringify.MoveAlgebraically(probe, moves[i]);
+
+                if (isBlackToMove)
+                {
+                    // Phong cách Chess.com: Nếu nước đầu tiên của biến thế là quân Đen đi
+                    if (i == 0)
+                    {
+                        pv.Append(currentMoveNumber).Append("... ");
+                    }
+
+                    pv.Append(algebraicMove);
+                    isBlackToMove = false;
+                    currentMoveNumber++; // Hết Đen tăng lượt lên Trắng
+                }
+                else
+                {
+                    // Lượt Trắng luôn in số lượt đi kèm
+                    pv.Append(currentMoveNumber).Append(". ").Append(algebraicMove);
+                    isBlackToMove = true;
+                }
+
+                probe.Make(moves[i]);
+            }
+            return pv.ToString().Trim();
+        }
     }
 }

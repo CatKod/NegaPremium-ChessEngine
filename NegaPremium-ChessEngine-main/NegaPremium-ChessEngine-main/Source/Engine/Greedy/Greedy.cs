@@ -32,8 +32,8 @@ namespace NegaPremium {
             if (rootMoves.Count == 0)
                 return Move.Invalid;
 
-            if (Restrictions.Output == OutputType.GUI) {
-                Terminal.Clear();
+            if (Restrictions.Output == OutputType.GUI)
+            {
                 Terminal.WriteLine("FEN: " + position.GetFEN());
                 Terminal.WriteLine();
                 Terminal.WriteLine("Depth   Value    Principal Variation");
@@ -271,7 +271,8 @@ namespace NegaPremium {
             return position.Bitboard[colour] != (position.Bitboard[colour | Piece.King] | position.Bitboard[colour | Piece.Pawn]);
         }
 
-        private static String GetGreedyPrincipalVariation(Position position, Int32 bestMove, Int32 depth) {
+        private static String GetGreedyPrincipalVariation(Position position, Int32 bestMove, Int32 depth)
+        {
             if (position == null || bestMove == Move.Invalid || depth <= 0)
                 return String.Empty;
 
@@ -280,7 +281,8 @@ namespace NegaPremium {
             moves.Add(bestMove);
             probe.Make(bestMove);
 
-            for (Int32 remaining = depth - 1; remaining > 0; remaining--) {
+            for (Int32 remaining = depth - 1; remaining > 0; remaining--)
+            {
                 List<Int32> legalMoves = probe.LegalMoves();
                 if (legalMoves.Count == 0)
                     break;
@@ -290,10 +292,55 @@ namespace NegaPremium {
                 probe.Make(reply);
             }
 
-            return Stringify.MovesAlgebraically(position.DeepClone(), moves, StringifyOptions.Proper);
+            // Tự động xây dựng chuỗi PV theo phong cách nối tiếp của Chess.com
+            System.Text.StringBuilder pv = new System.Text.StringBuilder();
+
+            // 1. Phân tích số lượt đi và phe nào đang đánh từ FEN thực tế
+            string[] fenParts = position.GetFEN().Split(' ');
+            int currentMoveNumber = 1;
+            bool isBlackToMove = false;
+
+            if (fenParts.Length >= 2 && fenParts[1] == "b")
+            {
+                isBlackToMove = true;
+            }
+            if (fenParts.Length >= 6)
+            {
+                int.TryParse(fenParts[5], out currentMoveNumber);
+            }
+
+            // 2. Dịch từng nước đi và tự động đánh số chuẩn PGN
+            probe = position.DeepClone();
+            for (int i = 0; i < moves.Count; i++)
+            {
+                if (i > 0) pv.Append(" "); // Khoảng trắng giữa các nước đi
+
+                string algebraicMove = Stringify.MoveAlgebraically(probe, moves[i]);
+
+                if (isBlackToMove)
+                {
+                    // Nếu là nước đầu tiên của PV mà vào lượt Đen
+                    if (i == 0) pv.Append(currentMoveNumber).Append("... ");
+
+                    pv.Append(algebraicMove);
+                    isBlackToMove = false;
+                    currentMoveNumber++; // Hết lượt Đen là sang lượt mới, tăng số đếm
+                }
+                else
+                {
+                    // Lượt Trắng luôn đi kèm số đếm
+                    pv.Append(currentMoveNumber).Append(". ").Append(algebraicMove);
+                    isBlackToMove = true;
+                }
+
+                probe.Make(moves[i]);
+            }
+
+            return pv.ToString().Trim();
         }
 
-        private static void WriteGreedyLog(Position position, Int32 depth, Int32 value, String principalVariation) {
+        private static void WriteGreedyLog(Position position, Int32 depth, Int32 value, String principalVariation)
+        {
             if (Restrictions.Output != OutputType.GUI)
                 return;
 
@@ -301,7 +348,7 @@ namespace NegaPremium {
                 ? (value > 0 ? "+Mate " : "-Mate ") + Math.Max(1, (CheckmateValue - Math.Abs(value) + GreedyMateDistanceOffset) / 2)
                 : String.Format("{0:+0.00;-0.00}", value / 100.0);
 
-            Terminal.WriteLine("{0,-7}{1,-9}{2}", depth, valueText, principalVariation);
+            Terminal.WriteLine("{0,-8}{1,-9}{2}", depth, valueText, principalVariation);
         }
 
         private static void PromoteRootMove(List<Int32> moves, Int32 bestMove) {
