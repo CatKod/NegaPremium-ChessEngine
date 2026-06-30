@@ -34,14 +34,6 @@ namespace NegaPremium {
             if (rootMoves.Count == 0)
                 return Move.Invalid;
 
-            if (Restrictions.Output == OutputType.GUI)
-            {
-                Terminal.WriteLine("FEN: " + position.GetFEN());
-                Terminal.WriteLine();
-                Terminal.WriteLine("Depth   Value    Principal Variation");
-                Terminal.WriteLine("-----------------------------------------------------------------------");
-            }
-
             _abortSearch = false;
             _stopwatch.Restart();
 
